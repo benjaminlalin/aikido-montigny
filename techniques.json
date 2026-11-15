@@ -1,0 +1,1070 @@
+[
+  {
+    "attaque": "Aïhanmi katate dori",
+    "defense": "Ikkyo ura",
+    "kyu": 5,
+    "indication": ""
+  },
+  {
+    "attaque": "Aïhanmi katate dori",
+    "defense": "Nikyo ura",
+    "kyu": 5,
+    "indication": ""
+  },
+  {
+    "attaque": "Aïhanmi katate dori",
+    "defense": "Irimi nage",
+    "kyu": 5,
+    "indication": ""
+  },
+  {
+    "attaque": "Aïhanmi katate dori",
+    "defense": "Kote gaeshi",
+    "kyu": 5,
+    "indication": ""
+  },
+  {
+    "attaque": "Aïhanmi katate dori",
+    "defense": "Shiho nage",
+    "kyu": 5,
+    "indication": ""
+  },
+  {
+    "attaque": "Katate dori",
+    "defense": "Kokyu nage",
+    "kyu": 5,
+    "indication": ""
+  },
+  {
+    "attaque": "Katate dori",
+    "defense": "Sumi-otoshi",
+    "kyu": 5,
+    "indication": ""
+  },
+  {
+    "attaque": "Katate ryote dori",
+    "defense": "Ikkyo omote",
+    "kyu": 5,
+    "indication": ""
+  },
+  {
+    "attaque": "Katate ryote dori",
+    "defense": "Nikyo ura",
+    "kyu": 5,
+    "indication": ""
+  },
+  {
+    "attaque": "Katate ryote dori",
+    "defense": "Irimi nage",
+    "kyu": 5,
+    "indication": ""
+  },
+  {
+    "attaque": "Katate ryote dori",
+    "defense": "Kokyu nage",
+    "kyu": 5,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro ryote dori",
+    "defense": "Kokyu nage",
+    "kyu": 5,
+    "indication": ""
+  },
+  {
+    "attaque": "Chudan tsuki",
+    "defense": "Kote gaeshi",
+    "kyu": 5,
+    "indication": ""
+  },
+  {
+    "attaque": "Chudan tsuki",
+    "defense": "Kiri-otoshi",
+    "kyu": 5,
+    "indication": ""
+  },
+  {
+    "attaque": "Shomen uchi",
+    "defense": "Irimi nage",
+    "kyu": 5,
+    "indication": ""
+  },
+  {
+    "attaque": "Yokomen uchi",
+    "defense": "Irimi nage",
+    "kyu": 5,
+    "indication": ""
+  },
+  {
+    "attaque": "Yokomen uchi",
+    "defense": "Kote gaeshi",
+    "kyu": 5,
+    "indication": ""
+  },
+  {
+    "attaque": "Yokomen uchi",
+    "defense": "Shiho nage",
+    "kyu": 5,
+    "indication": ""
+  },
+  {
+    "attaque": "Aïhanmi katate dori",
+    "defense": "Ikkyo omote",
+    "kyu": 4,
+    "indication": ""
+  },
+  {
+    "attaque": "Aïhanmi katate dori",
+    "defense": "Nikyo omote",
+    "kyu": 4,
+    "indication": ""
+  },
+  {
+    "attaque": "Aïhanmi katate dori",
+    "defense": "Ude kime nage",
+    "kyu": 4,
+    "indication": ""
+  },
+  {
+    "attaque": "Katate dori",
+    "defense": "Ikkyo omote",
+    "kyu": 4,
+    "indication": ""
+  },
+  {
+    "attaque": "Katate dori",
+    "defense": "Ikkyo ura",
+    "kyu": 4,
+    "indication": ""
+  },
+  {
+    "attaque": "Katate dori",
+    "defense": "Nikyo omote",
+    "kyu": 4,
+    "indication": ""
+  },
+  {
+    "attaque": "Katate dori",
+    "defense": "Nikyo ura",
+    "kyu": 4,
+    "indication": ""
+  },
+  {
+    "attaque": "Katate dori",
+    "defense": "Irimi nage",
+    "kyu": 4,
+    "indication": ""
+  },
+  {
+    "attaque": "Katate dori",
+    "defense": "Kote gaeshi",
+    "kyu": 4,
+    "indication": ""
+  },
+  {
+    "attaque": "Katate dori",
+    "defense": "Shiho nage",
+    "kyu": 4,
+    "indication": ""
+  },
+  {
+    "attaque": "Ryote dori",
+    "defense": "Ikkyo omote",
+    "kyu": 4,
+    "indication": ""
+  },
+  {
+    "attaque": "Ryote dori",
+    "defense": "Ikkyo ura",
+    "kyu": 4,
+    "indication": ""
+  },
+  {
+    "attaque": "Ryote dori",
+    "defense": "Nikyo omote",
+    "kyu": 4,
+    "indication": ""
+  },
+  {
+    "attaque": "Ryote dori",
+    "defense": "Nikyo ura",
+    "kyu": 4,
+    "indication": ""
+  },
+  {
+    "attaque": "Ryote dori",
+    "defense": "Irimi nage",
+    "kyu": 4,
+    "indication": ""
+  },
+  {
+    "attaque": "Ryote dori",
+    "defense": "Kote gaeshi",
+    "kyu": 4,
+    "indication": ""
+  },
+  {
+    "attaque": "Ryote dori",
+    "defense": "Shiho nage",
+    "kyu": 4,
+    "indication": ""
+  },
+  {
+    "attaque": "Katate ryote dori",
+    "defense": "Ikkyo ura",
+    "kyu": 4,
+    "indication": ""
+  },
+  {
+    "attaque": "Katate ryote dori",
+    "defense": "Nikyo omote",
+    "kyu": 4,
+    "indication": ""
+  },
+  {
+    "attaque": "Katate ryote dori",
+    "defense": "Shiho nage",
+    "kyu": 4,
+    "indication": ""
+  },
+  {
+    "attaque": "Katate ryote dori",
+    "defense": "Ude kime nage",
+    "kyu": 4,
+    "indication": ""
+  },
+  {
+    "attaque": "Katate ryote dori",
+    "defense": "Kokyu-ho",
+    "kyu": 4,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro ryote dori",
+    "defense": "Ikkyo omote",
+    "kyu": 4,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro kubishime katate dori",
+    "defense": "Ikkyo omote",
+    "kyu": 4,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro kubishime katate dori",
+    "defense": "Kokyu nage",
+    "kyu": 4,
+    "indication": ""
+  },
+  {
+    "attaque": "Chudan tsuki",
+    "defense": "Ikkyo omote",
+    "kyu": 4,
+    "indication": ""
+  },
+  {
+    "attaque": "Chudan tsuki",
+    "defense": "Ikkyo ura",
+    "kyu": 4,
+    "indication": ""
+  },
+  {
+    "attaque": "Shomen uchi",
+    "defense": "Kote gaeshi",
+    "kyu": 4,
+    "indication": ""
+  },
+  {
+    "attaque": "Yokomen uchi",
+    "defense": "Ude kime nage",
+    "kyu": 4,
+    "indication": ""
+  },
+  {
+    "attaque": "Yokomen uchi",
+    "defense": "Kokyu nage",
+    "kyu": 4,
+    "indication": ""
+  },
+  {
+    "attaque": "Aïhanmi katate dori",
+    "defense": "Sankyo omote",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Aïhanmi katate dori",
+    "defense": "Sankyo ura",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Aïhanmi katate dori",
+    "defense": "Koshi nage",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Katate dori",
+    "defense": "Sankyo omote",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Katate dori",
+    "defense": "Sankyo ura",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Katate dori",
+    "defense": "Ude kime nage",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Katate dori",
+    "defense": "Uchi kaiten nage omote",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Katate dori",
+    "defense": "Soto kaiten nage omote",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Katate dori",
+    "defense": "Tenchi nage",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Kata dori",
+    "defense": "Ikkyo omote",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Kata dori",
+    "defense": "Ikkyo ura",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Kata dori",
+    "defense": "Nikyo omote",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Kata dori",
+    "defense": "Nikyo ura",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Kata dori",
+    "defense": "Kokyu nage",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Ryote dori",
+    "defense": "Ude kime nage",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Ryote dori",
+    "defense": "Tenchi nage",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Ryote dori",
+    "defense": "Kokyu nage",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Ryo kata dori",
+    "defense": "Ikkyo omote",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Ryo kata dori",
+    "defense": "Ikkyo ura",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Ryo kata dori",
+    "defense": "Nikyo omote",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Ryo kata dori",
+    "defense": "Nikyo ura",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Katate ryote dori",
+    "defense": "Kote gaeshi",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro ryote dori",
+    "defense": "Nikyo omote",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro ryote dori",
+    "defense": "Nikyo ura",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro ryote dori",
+    "defense": "Sankyo omote",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro ryote dori",
+    "defense": "Sankyo ura",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro ryote dori",
+    "defense": "Irimi nage",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro ryote dori",
+    "defense": "Kote gaeshi",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro ryote dori",
+    "defense": "Shiho nage",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro ryo kata dori",
+    "defense": "Kokyu-ho",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro kubishime katate dori",
+    "defense": "Ikkyo ura",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro kubishime katate dori",
+    "defense": "Sankyo omote",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro kubishime katate dori",
+    "defense": "Sankyo ura",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro kubishime katate dori",
+    "defense": "Kote gaeshi",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro kubishime katate dori",
+    "defense": "Shiho nage",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Chudan tsuki",
+    "defense": "Irimi nage",
+    "kyu": 3,
+    "indication": "(forme omote)"
+  },
+  {
+    "attaque": "Chudan tsuki",
+    "defense": "Ude kime nage",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Shomen uchi",
+    "defense": "Kokyu nage",
+    "kyu": 3,
+    "indication": "tchak tchak"
+  },
+  {
+    "attaque": "Yokomen uchi",
+    "defense": "Ikkyo omote",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Yokomen uchi",
+    "defense": "Ikkyo ura",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Yokomen uchi",
+    "defense": "Nikyo omote",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Yokomen uchi",
+    "defense": "Nikyo ura",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Yokomen uchi",
+    "defense": "Sankyo omote",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Yokomen uchi",
+    "defense": "Sankyo ura",
+    "kyu": 3,
+    "indication": ""
+  },
+  {
+    "attaque": "Aïhanmi katate dori",
+    "defense": "Uchi kaiten sankyo",
+    "kyu": 2,
+    "indication": "Saisie pouce en haut"
+  },
+  {
+    "attaque": "Mune dori",
+    "defense": "Ikkyo omote",
+    "kyu": 2,
+    "indication": "Domino"
+  },
+  {
+    "attaque": "Mune dori",
+    "defense": "Ikkyo ura",
+    "kyu": 2,
+    "indication": "Domino"
+  },
+  {
+    "attaque": "Ryo kata dori",
+    "defense": "Kokyu nage",
+    "kyu": 2,
+    "indication": ""
+  },
+  {
+    "attaque": "Katate ryote dori",
+    "defense": "Koshi nage",
+    "kyu": 2,
+    "indication": "commence comme Ikkyo (coup sur le chapeau après entrainement)"
+  },
+  {
+    "attaque": "Katate ryote dori",
+    "defense": "Jugi-garami",
+    "kyu": 2,
+    "indication": "commence comme Ikkyo (coup sur le chapeau après entrainement)"
+  },
+  {
+    "attaque": "Kata dori menuchi",
+    "defense": "Irimi nage",
+    "kyu": 2,
+    "indication": ""
+  },
+  {
+    "attaque": "Kata dori menuchi",
+    "defense": "Kote gaeshi",
+    "kyu": 2,
+    "indication": ""
+  },
+  {
+    "attaque": "Kata dori menuchi",
+    "defense": "Shiho nage",
+    "kyu": 2,
+    "indication": ""
+  },
+  {
+    "attaque": "Kata dori menuchi",
+    "defense": "Ude kime nage",
+    "kyu": 2,
+    "indication": ""
+  },
+  {
+    "attaque": "Kata dori menuchi",
+    "defense": "Koshi nage",
+    "kyu": 2,
+    "indication": ""
+  },
+  {
+    "attaque": "Kata dori menuchi",
+    "defense": "Kokyu nage",
+    "kyu": 2,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro ryote dori",
+    "defense": "Ikkyo ura",
+    "kyu": 2,
+    "indication": "2 formes"
+  },
+  {
+    "attaque": "Ushiro ryote dori",
+    "defense": "Koshi nage",
+    "kyu": 2,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro ryote dori",
+    "defense": "Jugi-garami",
+    "kyu": 2,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro ryo kata dori",
+    "defense": "Ude kime nage",
+    "kyu": 2,
+    "indication": "zig et zag"
+  },
+  {
+    "attaque": "Ushiro kubishime katate dori",
+    "defense": "Koshi nage",
+    "kyu": 2,
+    "indication": "sortir la tete (à l'opposé de la saisie du cou)"
+  },
+  {
+    "attaque": "Ushiro eri dori",
+    "defense": "Irimi nage",
+    "kyu": 2,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro eri dori",
+    "defense": "Kote gaeshi",
+    "kyu": 2,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro eri dori",
+    "defense": "Shiho nage",
+    "kyu": 2,
+    "indication": ""
+  },
+  {
+    "attaque": "Jodan tsuki",
+    "defense": "Ikkyo omote",
+    "kyu": 2,
+    "indication": ""
+  },
+  {
+    "attaque": "Jodan tsuki",
+    "defense": "Ikkyo ura",
+    "kyu": 2,
+    "indication": "claque sur le chapeau"
+  },
+  {
+    "attaque": "Jodan tsuki",
+    "defense": "Uchi kaiten sankyo",
+    "kyu": 2,
+    "indication": "crochette"
+  },
+  {
+    "attaque": "Jodan tsuki",
+    "defense": "Irimi nage",
+    "kyu": 2,
+    "indication": ""
+  },
+  {
+    "attaque": "Jodan tsuki",
+    "defense": "Kote gaeshi",
+    "kyu": 2,
+    "indication": ""
+  },
+  {
+    "attaque": "Jodan tsuki",
+    "defense": "Ude kime nage",
+    "kyu": 2,
+    "indication": ""
+  },
+  {
+    "attaque": "Jodan tsuki",
+    "defense": "Uchi kaiten nage omote",
+    "kyu": 2,
+    "indication": ""
+  },
+  {
+    "attaque": "Jodan tsuki",
+    "defense": "Uchi kaiten nage ura",
+    "kyu": 2,
+    "indication": ""
+  },
+  {
+    "attaque": "Jodan tsuki",
+    "defense": "Soto kaiten nage omote",
+    "kyu": 2,
+    "indication": ""
+  },
+  {
+    "attaque": "Jodan tsuki",
+    "defense": "Soto kaiten nage ura",
+    "kyu": 2,
+    "indication": ""
+  },
+  {
+    "attaque": "Jodan tsuki",
+    "defense": "Kokyu nage",
+    "kyu": 2,
+    "indication": ""
+  },
+  {
+    "attaque": "Chudan tsuki",
+    "defense": "Kokyu nage",
+    "kyu": 2,
+    "indication": ""
+  },
+  {
+    "attaque": "Shomen uchi",
+    "defense": "Ikkyo omote",
+    "kyu": 2,
+    "indication": ""
+  },
+  {
+    "attaque": "Shomen uchi",
+    "defense": "Ikkyo ura",
+    "kyu": 2,
+    "indication": ""
+  },
+  {
+    "attaque": "Shomen uchi",
+    "defense": "Nikyo omote",
+    "kyu": 2,
+    "indication": ""
+  },
+  {
+    "attaque": "Shomen uchi",
+    "defense": "Nikyo ura",
+    "kyu": 2,
+    "indication": ""
+  },
+  {
+    "attaque": "Shomen uchi",
+    "defense": "Sankyo omote",
+    "kyu": 2,
+    "indication": ""
+  },
+  {
+    "attaque": "Shomen uchi",
+    "defense": "Sankyo ura",
+    "kyu": 2,
+    "indication": ""
+  },
+  {
+    "attaque": "Shomen uchi",
+    "defense": "Uchi kaiten sankyo",
+    "kyu": 2,
+    "indication": "tchak tchak"
+  },
+  {
+    "attaque": "Shomen uchi",
+    "defense": "Yonkyo omote",
+    "kyu": 2,
+    "indication": ""
+  },
+  {
+    "attaque": "Shomen uchi",
+    "defense": "Yonkyo ura",
+    "kyu": 2,
+    "indication": "saisie comme sankyo ura"
+  },
+  {
+    "attaque": "Yokomen uchi",
+    "defense": "Yonkyo omote",
+    "kyu": 2,
+    "indication": "comme dommino (entrainer puis soulever)"
+  },
+  {
+    "attaque": "Yokomen uchi",
+    "defense": "Yonkyo ura",
+    "kyu": 2,
+    "indication": "comme dommino (entree direct puis tourner)"
+  },
+  {
+    "attaque": "Yokomen uchi",
+    "defense": "Gokyo omote",
+    "kyu": 2,
+    "indication": "entrée en cercle intérieur et saisir le poignet. puis mouvement du forgeron"
+  },
+  {
+    "attaque": "Yokomen uchi",
+    "defense": "Gokyo ura",
+    "kyu": 2,
+    "indication": ""
+  },
+  {
+    "attaque": "Katate dori",
+    "defense": "Koshi nage",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Katate dori",
+    "defense": "Hiji-kime osae",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Mune dori",
+    "defense": "Uchi kaiten sankyo",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Mune dori",
+    "defense": "Shiho nage",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Ryote dori",
+    "defense": "Koshi nage",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Ryo kata dori",
+    "defense": "Kokyu-ho",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Kata dori menuchi",
+    "defense": "Ikkyo omote",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Kata dori menuchi",
+    "defense": "Ikkyo ura",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Kata dori menuchi",
+    "defense": "Nikyo omote",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Kata dori menuchi",
+    "defense": "Nikyo ura",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro ryo kata dori",
+    "defense": "Ikkyo omote",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro ryo kata dori",
+    "defense": "Ikkyo ura",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro ryo kata dori",
+    "defense": "Nikyo omote",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro ryo kata dori",
+    "defense": "Nikyo ura",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro ryo kata dori",
+    "defense": "Sankyo omote",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro ryo kata dori",
+    "defense": "Sankyo ura",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro ryo kata dori",
+    "defense": "Irimi nage",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro ryo kata dori",
+    "defense": "Kote gaeshi",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro ryo kata dori",
+    "defense": "Kokyu nage",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro ryo kata dori",
+    "defense": "Aïki-otoshi",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro eri dori",
+    "defense": "Ikkyo omote",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro eri dori",
+    "defense": "Ikkyo ura",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro eri dori",
+    "defense": "Nikyo omote",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro eri dori",
+    "defense": "Nikyo ura",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro eri dori",
+    "defense": "Tenchi nage",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Ushiro eri dori",
+    "defense": "Kokyu nage",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Jodan tsuki",
+    "defense": "Koshi nage",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Chudan tsuki",
+    "defense": "Uchi kaiten sankyo",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Chudan tsuki",
+    "defense": "Uchi kaiten nage omote",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Chudan tsuki",
+    "defense": "Uchi kaiten nage ura",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Chudan tsuki",
+    "defense": "Soto kaiten nage omote",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Chudan tsuki",
+    "defense": "Soto kaiten nage ura",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Chudan tsuki",
+    "defense": "Hiji-kime osae",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Shomen uchi",
+    "defense": "Gokyo omote",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Shomen uchi",
+    "defense": "Gokyo ura",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Shomen uchi",
+    "defense": "Shiho nage",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Shomen uchi",
+    "defense": "Uchi kaiten nage omote",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Shomen uchi",
+    "defense": "Uchi kaiten nage ura",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Shomen uchi",
+    "defense": "Soto kaiten nage omote",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Shomen uchi",
+    "defense": "Soto kaiten nage ura",
+    "kyu": 1,
+    "indication": ""
+  },
+  {
+    "attaque": "Yokomen uchi",
+    "defense": "Koshi nage",
+    "kyu": 1,
+    "indication": ""
+  }
+]

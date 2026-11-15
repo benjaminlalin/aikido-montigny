@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Interrogation d'Aikido</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <svg class="enso" viewBox="0 0 48 48" aria-hidden="true">
+      <circle cx="24" cy="24" r="17" fill="none" stroke="currentColor" stroke-width="4"
+              stroke-linecap="round" stroke-dasharray="94 13" transform="rotate(-70 24 24)"/>
+    </svg>
+    <h1>Interrogation d'Aikido</h1>
+  </header>
+
+  <main>
+
+    <!-- ============ 1. Préparation ============ -->
+    <section id="screen-setup" class="panel" aria-labelledby="setup-title">
+      <h2 id="setup-title" tabindex="-1">Préparer l'interrogation</h2>
+
+      <p id="load-status" class="muted">Chargement des techniques…</p>
+
+      <div id="load-error" class="notice notice-error" role="alert" hidden>
+        <p id="load-error-msg"></p>
+        <p>
+          <label class="btn btn-secondary file-btn">
+            Choisir le fichier JSON
+            <input type="file" id="json-file" accept=".json,application/json">
+          </label>
+        </p>
+      </div>
+
+      <form id="setup-form" hidden>
+        <p class="muted">Sans sélection dans un filtre, toutes les valeurs sont retenues.</p>
+
+        <fieldset>
+          <legend>Attaque</legend>
+          <div id="group-attaque" class="chips"></div>
+          <button type="button" class="link-btn" data-clear="attaque">Tout désélectionner</button>
+        </fieldset>
+
+        <fieldset>
+          <legend>Défense</legend>
+          <div id="group-defense" class="chips"></div>
+          <button type="button" class="link-btn" data-clear="defense">Tout désélectionner</button>
+        </fieldset>
+
+        <fieldset>
+          <legend>Kyu</legend>
+          <div id="group-kyu" class="chips"></div>
+          <button type="button" class="link-btn" data-clear="kyu">Tout désélectionner</button>
+        </fieldset>
+
+        <fieldset>
+          <legend>Nombre maximum de questions</legend>
+          <div class="max-row">
+            <input type="number" id="max-questions" min="1" step="1" value="16" inputmode="numeric">
+            <span class="muted">Laisser vide pour toutes les techniques.</span>
+          </div>
+        </fieldset>
+
+        <div class="setup-footer">
+          <p id="match-info" class="match-info" aria-live="polite"></p>
+          <button type="submit" id="btn-start" class="btn btn-primary btn-large">Lancer l'interrogation</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ============ 2. Interrogation ============ -->
+    <section id="screen-quiz" class="panel" aria-label="Interrogation en cours" hidden>
+
+      <div class="quiz-top">
+        <div class="counter">
+          <svg class="ring" viewBox="0 0 72 72" aria-hidden="true">
+            <circle class="ring-track" cx="36" cy="36" r="30"/>
+            <circle id="ring-fill" class="ring-fill" cx="36" cy="36" r="30"/>
+          </svg>
+          <span id="remaining" class="ring-number" aria-hidden="true">0</span>
+          <div class="counter-text">
+            <strong id="remaining-text">0 technique restante</strong>
+            <span id="progress-text" class="muted">Technique 1 sur 1</span>
+          </div>
+        </div>
+
+        <div class="quiz-top-right">
+          <span id="status-badge" class="badge" data-status="none">Non évaluée</span>
+          <button type="button" id="btn-stop" class="link-btn">Terminer maintenant</button>
+        </div>
+      </div>
+
+      <div class="technique">
+        <div class="tech-block">
+          <span class="label">Attaque</span>
+          <p id="q-attaque" class="tech-name"></p>
+        </div>
+        <div class="tech-block">
+          <span class="label">Défense attendue</span>
+          <p id="q-defense" class="tech-name"></p>
+        </div>
+        <p id="q-kyu" class="kyu-tag"></p>
+      </div>
+
+      <div class="video-frame">
+        <video id="video" controls preload="metadata" playsinline></video>
+        <div id="video-msg" class="video-msg" hidden>
+          <p>Vidéo introuvable</p>
+          <p id="video-msg-file" class="video-msg-file"></p>
+        </div>
+      </div>
+
+      <div id="indication-box" class="indication" hidden>
+        <span class="label">Indication</span>
+        <p id="indication-text"></p>
+      </div>
+
+      <div class="actions">
+        <button type="button" id="btn-ok" class="btn btn-ok">OK</button>
+        <button type="button" id="btn-work" class="btn btn-work">À travailler</button>
+        <button type="button" id="btn-play" class="btn btn-secondary">Jouer la vidéo</button>
+        <button type="button" id="btn-indication" class="btn btn-secondary">Afficher l'indication</button>
+        <button type="button" id="btn-next" class="btn btn-primary">Suivant</button>
+      </div>
+    </section>
+
+    <!-- ============ 3. Rapport ============ -->
+    <section id="screen-report" class="panel" aria-labelledby="report-title" hidden>
+      <h2 id="report-title" tabindex="-1">Rapport d'interrogation</h2>
+
+      <dl class="report-meta">
+        <div><dt>Date</dt><dd id="report-date"></dd></div>
+        <div><dt>Filtres</dt><dd id="report-filters"></dd></div>
+        <div><dt>Résultat</dt><dd id="report-summary"></dd></div>
+      </dl>
+
+      <p id="report-note" class="notice" hidden></p>
+
+      <div class="table-wrap">
+        <table class="report-table">
+          <thead>
+            <tr>
+              <th scope="col">Technique</th>
+              <th scope="col">Kyu</th>
+              <th scope="col">Résultat</th>
+            </tr>
+          </thead>
+          <tbody id="report-body"></tbody>
+        </table>
+      </div>
+
+      <div class="actions report-actions">
+        <button type="button" id="btn-print" class="btn btn-secondary">Imprimer le rapport</button>
+        <button type="button" id="btn-retry" class="btn btn-work">Refaire les techniques à travailler</button>
+        <button type="button" id="btn-new" class="btn btn-primary">Nouvelle interrogation</button>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
