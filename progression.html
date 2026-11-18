@@ -1819,19 +1819,24 @@ document.querySelectorAll('img[data-logo2]').forEach((img) => { img.src = LOGO2;
     video.muted = false;
     video.play().catch(() => { video.muted = true; video.play().catch(() => {}); });
   }
+  /* Un nom accentué peut être enregistré de deux façons (« ï » d’un seul caractère, ou « i » + tréma, fréquent depuis un Mac) */
+  const nameVariants = (n) => [...new Set([n.normalize('NFC'), n.normalize('NFD')])];
   async function loadVideo(t) {
     stopVideo();
-    const token = videoToken, url = VIDEO_DIR + encodeURIComponent(videoName(t));
+    const token = videoToken, urls = nameVariants(videoName(t)).map((n) => VIDEO_DIR + encodeURIComponent(n));
     videoMessage('');
     if (location.protocol === 'file:') {
-      video.src = url;
+      let i = 0;
+      video.onerror = () => { if (token === videoToken && i < urls.length) { video.src = urls[i++]; startPlayback(); } };
+      video.src = urls[i++];
       startPlayback();
       return;
     }
     videoMessage('Chargement de la vidéo…');
     try {
-      const res = await fetch(url);
-      if (!res.ok) throw new Error(res.status);
+      let res = null;
+      for (const u of urls) { const r = await fetch(u); if (r.ok) { res = r; break; } }
+      if (!res) throw new Error('404');
       const blob = await res.blob();
       if (token !== videoToken) return;
       blobUrl = URL.createObjectURL(blob);
@@ -2273,25 +2278,29 @@ document.querySelectorAll('img[data-logo2]').forEach((img) => { img.src = LOGO2;
         <div class="video-msg" id="kata-msg"><button type="button" class="btn btn-secondary" id="btn-kata">Voir le kata</button></div></div></div>`;
   }
   let kataBlob = null;
+  /* Plusieurs écritures possibles du nom : « ï » composé ou décomposé (Mac), ou sans accent */
+  const kataNames = () => [...nameVariants(KATA_FILE), KATA_FILE.normalize('NFD').replace(/[\u0300-\u036f]/g, '')];
   async function playKata() {
-    const v = $('kata-video'), msg = $('kata-msg'), url = VIDEO_DIR + encodeURIComponent(KATA_FILE);
-    try {
-      if (location.protocol === 'file:') v.src = url;
-      else {
-        msg.innerHTML = '<p>Chargement de la vidéo…</p>';
-        if (!kataBlob) {
-          const res = await fetch(url);
-          if (!res.ok) throw new Error(res.status);
-          kataBlob = URL.createObjectURL(await res.blob());
-        }
-        v.src = kataBlob;
-      }
-      msg.hidden = true;
-      v.play().catch(() => {});
-    } catch {
-      msg.hidden = false;
-      msg.innerHTML = `<p>Vidéo introuvable : ${esc(KATA_FILE)}</p>`;
+    const v = $('kata-video'), msg = $('kata-msg');
+    const urls = kataNames().map((n) => VIDEO_DIR + encodeURIComponent(n));
+    const fail = () => { msg.hidden = false; msg.innerHTML = `<p>Vidéo introuvable : ${esc(KATA_FILE)}</p>`; };
+    if (location.protocol === 'file:') {
+      let i = 0;
+      const tryNext = () => { if (i >= urls.length) return fail(); v.src = urls[i++]; v.play().catch(() => {}); };
+      v.onerror = tryNext;
+      msg.hidden = true; tryNext();
+      return;
     }
+    msg.innerHTML = '<p>Chargement de la vidéo…</p>';
+    try {
+      if (!kataBlob) {
+        let res = null;
+        for (const u of urls) { const r = await fetch(u); if (r.ok) { res = r; break; } }
+        if (!res) throw new Error('404');
+        kataBlob = URL.createObjectURL(await res.blob());
+      }
+      v.src = kataBlob; msg.hidden = true; v.play().catch(() => {});
+    } catch { fail(); }
   }
 
   /* Point d’attention du jour, tiré des critères du jury */
