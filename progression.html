@@ -417,6 +417,28 @@ input[type="date"]::-webkit-datetime-edit { padding: 0; }
   .doki-bubble { top: .2rem; max-width: 11rem; font-size: .85rem; }
 }
 
+/* Programme des dan : familles de techniques */
+.waza-title { margin: 1.1rem 0 .5rem; font: 500 1rem var(--font-body); color: var(--ink); }
+.waza-title:first-child { margin-top: .2rem; }
+.waza-tag { color: var(--muted); font-size: .88em; }
+.waza-tag::after { content: " ·"; }
+
+/* Passage de grade */
+#exam-chips { margin-bottom: 1.1rem; }
+.exam-block { margin: 0 0 1.1rem; }
+.exam-block h3 { margin: 0 0 .45rem; font: 500 1rem var(--font-body); color: var(--muted); }
+.exam-block p, .exam-block li { margin: 0 0 .3rem; }
+.exam-block ul, .exam-block ol { margin: 0; padding-left: 1.2rem; }
+.exam-block .note { color: var(--muted); font-size: .9rem; }
+.exam-source { margin-top: 1rem; font-size: .82rem; color: var(--faint); }
+.lexicon { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: .5rem 1.5rem; margin-top: .4rem; }
+.lexicon div { padding: .35rem 0; border-bottom: 1px solid var(--line); font-size: .93rem; }
+.lexicon b { font-weight: 500; }
+.lexicon .jp { margin-left: .35em; }
+details.lexicon-box summary { cursor: pointer; color: var(--ai); }
+.program-exam { margin: -.4rem 0 .9rem; font-size: .9rem; color: var(--muted); }
+.analysis p.point { margin-top: .5rem; font-size: .95rem; }
+
 /* Profil */
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 1.5rem; row-gap: 0; }
 .form-grid .field { display: grid; grid-row: span 3; grid-template-rows: subgrid; row-gap: .35rem; margin-bottom: 1rem; min-width: 0; }
@@ -502,8 +524,9 @@ button, .chip, .cell, .rate { -webkit-tap-highlight-color: transparent; touch-ac
   <ul>
     <li><button type="button" data-go="sec-hero">Accueil</button></li>
     <li><button type="button" data-go="sec-weak">Conseil de Doki</button></li>
-    <li><button type="button" data-go="sec-overview">Bilan</button></li>
     <li><button type="button" data-go="new-session">Nouvelle séance</button></li>
+    <li><button type="button" data-go="sec-exam">Passage de grade</button></li>
+    <li><button type="button" data-go="sec-overview">Bilan</button></li>
     <li><button type="button" data-go="sec-hist">Historique</button></li>
     <li><button type="button" data-go="sec-data">Mes données</button></li>
     <li><button type="button" data-go="profile">Mon profil</button></li>
@@ -561,14 +584,6 @@ button, .chip, .cell, .rate { -webkit-tap-highlight-color: transparent; touch-ac
       <div id="weak-list"></div>
     </section>
 
-    <section class="panel" id="sec-overview" aria-labelledby="t-overview">
-      <h2 id="t-overview">Bilan</h2>
-      <div class="totals" id="totals"></div>
-      <div id="kyu-bars"></div>
-      <div class="legend" id="legend"></div>
-      <div class="row" style="margin-top:1.1rem"><button type="button" class="btn btn-secondary" id="btn-bilan-pdf">Rapport d’avancement (PDF)</button></div>
-    </section>
-
     <section class="panel" aria-labelledby="t-new" id="new-session">
       <h2 id="t-new" tabindex="-1">Nouvelle séance</h2>
       <form id="setup-form">
@@ -609,6 +624,21 @@ button, .chip, .cell, .rate { -webkit-tap-highlight-color: transparent; touch-ac
         </div>
       </form>
     </section>
+
+    <section class="panel" id="sec-exam" aria-labelledby="t-exam">
+      <h2 id="t-exam">Passage de grade</h2>
+      <div class="chips" id="exam-chips" role="radiogroup" aria-label="Grade"></div>
+      <div id="exam-body"></div>
+    </section>
+
+    <section class="panel" id="sec-overview" aria-labelledby="t-overview">
+      <h2 id="t-overview">Bilan</h2>
+      <div class="totals" id="totals"></div>
+      <div id="kyu-bars"></div>
+      <div class="legend" id="legend"></div>
+      <div class="row" style="margin-top:1.1rem"><button type="button" class="btn btn-secondary" id="btn-bilan-pdf">Rapport d’avancement (PDF)</button></div>
+    </section>
+
 
 
     <section class="panel" id="sec-hist" aria-labelledby="t-hist">
@@ -804,7 +834,8 @@ document.querySelectorAll('img[data-logo]').forEach((img) => { img.src = LOGO; }
   const fmtDate = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'long', timeStyle: 'short' });
   const fmtShort = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'short' });
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  const kyuLabel = (k) => Number.isFinite(k) ? (k === 1 ? '1er\u00a0kyū' : `${k}e\u00a0kyū`) : 'Kyū non précisé';
+  const kyuLabel = (k) => k === 0 ? 'Dan' : Number.isFinite(k) ? (k === 1 ? '1er\u00a0kyū' : `${k}e\u00a0kyū`) : 'Kyū non précisé';
+  const programName = (k) => k === 0 ? 'programme des dan' : `programme du ${kyuLabel(k)}`;
   const color = (n) => `var(--n${n})`;
   const soft = (n) => `var(--n${n}-soft)`;
   const tag = (n) => n ? `<span class="tag" style="--c:${color(n)};--s:${soft(n)}">${n} · ${LEVELS[n].label}</span>` : '<span class="tag">Non notée</span>';
@@ -859,7 +890,7 @@ document.querySelectorAll('img[data-logo]').forEach((img) => { img.src = LOGO; }
     'irimi nage': '入身投げ', 'kote gaeshi': '小手返し', 'shiho nage': '四方投げ', 'ude kime nage': '腕極め投げ',
     'kaiten nage': '回転投げ', 'tenchi nage': '天地投げ', 'koshi nage': '腰投げ', 'kokyu nage': '呼吸投げ', 'aiki kokyu nage': '合気呼吸投げ',
     'kokyu ho': '呼吸法', 'aiki otoshi': '合気落とし', 'kiri otoshi': '切り落とし', 'sumi otoshi': '隅落とし', 'juji garami': '十字絡み',
-    'ude garami': '腕絡み', 'hiji kime osae': '肘極め抑え', 'aiki nage': '合気投げ', 'ura nage': '裏投げ', 'naname kokyu nage': '斜め呼吸投げ',
+    'ude garami': '腕絡み', 'hiji kime osae': '肘極め抑え', 'ushiro kiri otoshi': '後ろ切り落とし', 'aiki nage': '合気投げ', 'ura nage': '裏投げ', 'naname kokyu nage': '斜め呼吸投げ',
   };
   const JP_SUFFIX = [['omote', '表'], ['ura', '裏'], ['uchi', '内'], ['soto', '外']];
   function jpLookup(name, dict) {
@@ -879,7 +910,8 @@ document.querySelectorAll('img[data-logo]').forEach((img) => { img.src = LOGO; }
   const jpSpan = (ja) => ja ? `<span class="jp" lang="ja">${ja}</span>` : '';
   const attHtml = (n) => `${esc(n)}${jpSpan(jpAtt(n))}`;
   const defHtml = (n) => `${esc(n)}${jpSpan(jpDef(n))}`;
-  const techHtml = (t) => `${fundMark(t)}${attHtml(t.attaque)} — ${defHtml(t.defense)}`;
+  const wazaTag = (t) => t.waza && t.waza !== 'tachi' && t.waza !== 'ushiro' ? `<span class="waza-tag">${WAZA[t.waza].label}</span> ` : '';
+  const techHtml = (t) => `${fundMark(t)}${wazaTag(t)}${attHtml(t.attaque)} — ${defHtml(t.defense)}`;
 
   /* Techniques fondamentales (♥) du programme d’examen Aïkido Montigny, septembre 2019.
      5e kyu ceinture jaune, 4e orange, 3e verte, 2e bleue, 1er marron. [attaque, technique, variante éventuelle] */
@@ -907,11 +939,82 @@ document.querySelectorAll('img[data-logo]').forEach((img) => { img.src = LOGO; }
   }
   const fundMark = (t) => t.fund ? '<span class="fund" title="Technique fondamentale" aria-label="Technique fondamentale">♥</span> ' : '';
 
+
+  /* Programme des dan : « Liste des techniques à utiliser en priorité pour les interrogations de shodan à yondan »
+     (règlement des grades, II-2). Une technique précédée de * est soulignée dans le document : technique fondamentale (♥). */
+  const WAZA = {
+    suwari: { label: 'Suwari waza', jp: '座り技' },
+    hanmi: { label: 'Hanmi handachi waza', jp: '半身半立ち技' },
+    tachi: { label: 'Tachi waza', jp: '立ち技' },
+    ushiro: { label: 'Ushiro waza', jp: '後ろ技' },
+  };
+  const WAZA_ORDER = ['suwari', 'hanmi', 'tachi', 'ushiro'];
+  const wazaOf = (t) => t.waza || 'tachi';
+  const DAN_PROGRAM = [
+    ['suwari', 'Shomen uchi', '*Ikkyo; Nikyo; Sankyo; Yonkyo; Gokyo; *Irimi nage; Kote gaeshi; Kokyu nage'],
+    ['suwari', 'Yokomen uchi', '*Ikkyo; Nikyo; Sankyo; Yonkyo; Gokyo; Irimi nage; *Kote gaeshi; Kokyu nage'],
+    ['suwari', 'Kata dori', 'Ikkyo; Nikyo'],
+    ['hanmi', 'Katate dori', 'Ikkyo; Nikyo; Irimi nage; Kote gaeshi; *Shiho nage; Kaiten nage|Uchi ou soto; Kokyu nage'],
+    ['hanmi', 'Ryote dori', 'Shiho nage; Kokyu nage'],
+    ['hanmi', 'Ushiro ryo kata dori', '*Ikkyo; Sankyo; Kote gaeshi; *Kokyu nage'],
+    ['tachi', 'Aïhanmi katate dori', '*Ikkyo; Nikyo; Sankyo; Uchi kaiten sankyo; Irimi nage; Kote gaeshi; *Shiho nage; Ude kime nage; Koshi nage'],
+    ['tachi', 'Katate dori', 'Ikkyo; Nikyo; Sankyo; *Irimi nage; Kote gaeshi; Shiho nage; *Kaiten nage; Tenchi nage; Sumi otoshi; Hiji kime osae; Ude kime nage; Koshi nage; Kokyu nage'],
+    ['tachi', 'Kata dori', '*Ikkyo; Nikyo; Kokyu nage'],
+    ['tachi', 'Mune dori', 'Ikkyo; *Shiho nage; *Uchi kaiten sankyo'],
+    ['tachi', 'Ryote dori', 'Ikkyo; Nikyo; *Irimi nage; Kote gaeshi; Shiho nage; Ude kime nage; *Tenchi nage; Koshi nage; Kokyu nage'],
+    ['tachi', 'Ryo kata dori', '*Ikkyo; Nikyo; Irimi nage|Sokumen (naname kokyu nage); *Kokyu nage'],
+    ['tachi', 'Katate ryote dori', '*Ikkyo; Nikyo; Irimi nage; Kote gaeshi; *Shiho nage; Kokyu ho; Kokyu nage; Koshi nage; Ude kime nage; *Juji garami'],
+    ['tachi', 'Chudan tsuki', 'Ikkyo; Sankyo|Uchi kaiten; Irimi nage; Kote gaeshi; Kaiten nage|Uchi ou soto; Kokyu nage; Ude kime nage; *Hiji kime osae; Ushiro kiri otoshi'],
+    ['tachi', 'Jodan tsuki', '*Ikkyo; Sankyo|Uchi kaiten; Irimi nage; Kote gaeshi; *Kaiten nage; Kokyu nage; Ude kime nage; Koshi nage'],
+    ['tachi', 'Shomen uchi', '*Ikkyo; *Nikyo; Sankyo|Soto kaiten, uchi kaiten; Yonkyo; Gokyo; *Irimi nage; Kote gaeshi; Shiho nage; Kaiten nage; Kokyu nage'],
+    ['tachi', 'Yokomen uchi', '*Ikkyo; Nikyo; Sankyo; Yonkyo; Gokyo; Irimi nage; *Kote gaeshi; *Shiho nage; Ude kime nage; Koshi nage; Kokyu nage'],
+    ['tachi', 'Kata dori menuchi', '*Ikkyo; *Nikyo; Shiho nage; Ude kime nage; *Koshi nage; Kote gaeshi; Irimi nage; Kokyu nage'],
+    ['ushiro', 'Ushiro ryote dori', '*Ikkyo; Nikyo; Sankyo; Irimi nage; Kote gaeshi; *Shiho nage; *Juji garami; Koshi nage; Kokyu nage'],
+    ['ushiro', 'Ushiro ryo kata dori', '*Ikkyo; Nikyo; Sankyo; Kote gaeshi; Irimi nage|Naname kokyu nage; Aiki otoshi; Kokyu nage; *Ude kime nage'],
+    ['ushiro', 'Ushiro eri dori', '*Ikkyo; Nikyo; *Irimi nage; Shiho nage; Tenchi nage; Kote gaeshi; Kokyu nage'],
+    ['ushiro', 'Ushiro kubishime katate dori', 'Ikkyo; *Sankyo; *Koshi nage; Kote gaeshi; *Shiho nage; Kokyu nage'],
+  ];
+  const DAN_KYU = 0; // le programme des dan est rangé comme un « kyū 0 », après le 1er kyū
+  function danTechniques() {
+    const out = [];
+    for (const [waza, attaque, list] of DAN_PROGRAM) {
+      for (const raw of list.split(';')) {
+        let [name, note] = raw.trim().split('|');
+        const fund = name.startsWith('*'); name = name.replace(/^\*/, '').trim();
+        out.push({ attaque, defense: name, kyu: DAN_KYU, waza, indication: note ? note.trim() : '', fundGiven: fund,
+          id: `dan — ${waza} — ${attaque} — ${name}` });
+      }
+    }
+    return out;
+  }
+
+  function linkDanVideos(kyuTechs, all) {
+    const key = (t) => `${rankAtt(t.attaque)}|${rankDef(t.defense)}|${squash(t.defense)}`;
+    const loose = (t) => `${rankAtt(t.attaque)}|${rankDef(t.defense)}`;
+    const exact = new Map(), approx = new Map();
+    for (const t of kyuTechs) {
+      if (rankAtt(t.attaque) === 999 || rankDef(t.defense) === 999) continue;
+      if (!exact.has(key(t))) exact.set(key(t), t);
+      if (!approx.has(loose(t))) approx.set(loose(t), t);
+    }
+    for (const t of all) {
+      if (t.kyu !== DAN_KYU) continue;
+      const w = wazaOf(t);
+      if (w === 'tachi' || w === 'ushiro') {
+        const m = exact.get(key(t)) || approx.get(loose(t));
+        t.video = m ? `${m.attaque} - ${m.defense}.mp4` : `${t.attaque} - ${t.defense}.mp4`;
+      } else {
+        t.video = `${WAZA[w].label} - ${t.attaque} - ${t.defense}.mp4`;
+      }
+    }
+  }
   function setTechniques(data) {
-    const list = normalize(data);
-    if (!list.length) throw new Error('aucune technique valide dans le fichier');
+    const kyuList_ = normalize(data);
+    if (!kyuList_.length) throw new Error('aucune technique valide dans le fichier');
+    const list = kyuList_.concat(danTechniques());
     app.techniques = list;
-    for (const t of list) t.fund = isFundamental(t);
+    for (const t of list) t.fund = t.fundGiven ?? isFundamental(t);
+    linkDanVideos(kyuList_, list);
     app.byId = new Map(list.map((t) => [t.id, t]));
     $('load-error').hidden = true;
     buildForm();
@@ -1029,7 +1132,8 @@ document.querySelectorAll('img[data-logo]').forEach((img) => { img.src = LOGO; }
   function nextTarget() {
     const kyus = [...new Set(app.techniques.map((t) => t.kyu))].filter(Number.isFinite).sort((a, b) => b - a);
     const g = currentGrade();
-    if (!g) return kyus[0] ?? null;
+    if (!g) return kyus.find((k) => k > 0) ?? null;
+    if (g < 0) return g > -4 && kyus.includes(0) ? 0 : null; // de shodan à yondan
     return kyus.find((k) => k < g) ?? null;
   }
   /* Rotation des citations sur l’accueil, toutes les 10 secondes */
@@ -1265,7 +1369,7 @@ document.querySelectorAll('img[data-logo]').forEach((img) => { img.src = LOGO; }
     if (cur) cur.scrollIntoView({ block: 'nearest', inline: 'nearest' });
   }
   /* Surligne la rubrique visible pendant le défilement */
-  const SPY = ['sec-hero', 'sec-weak', 'sec-overview', 'new-session', 'sec-hist', 'sec-data'];
+  const SPY = ['sec-hero', 'sec-weak', 'new-session', 'sec-exam', 'sec-overview', 'sec-hist', 'sec-data'];
   let spyLock = 0, spyFrame = 0;
   function spyNow() {
     spyFrame = 0;
@@ -1301,7 +1405,8 @@ document.querySelectorAll('img[data-logo]').forEach((img) => { img.src = LOGO; }
     const uniq = (k) => [...new Set(app.techniques.map((t) => t[k]))];
     chips($('mode-chips'), MODES.map((m) => m[0]), 'mode', (v) => MODES.find((m) => m[0] === v)[1], 'radio', (v) => v === 'faibles');
     chips($('order-chips'), ORDERS.map((o) => o[0]), 'order', (v) => ORDERS.find((o) => o[0] === v)[1], 'radio', (v) => v === 'random');
-    chips($('g-kyu'), uniq('kyu').sort((a, b) => b - a), 'kyu', (k) => kyuLabel(Number(k)));
+    const kyuChips = uniq('kyu').sort((a, b) => b - a).flatMap((k) => k === 0 ? [-1, -2] : [k]);
+    chips($('g-kyu'), kyuChips, 'kyu', (k) => Number(k) < 0 ? gradeLabel(Number(k)).replace(/ \(.*\)$/, '') : kyuLabel(Number(k)));
     chips($('g-attaque'), uniq('attaque').sort(collator.compare), 'attaque');
     chips($('g-defense'), uniq('defense').sort(collator.compare), 'defense');
     updateOrderHelp();
@@ -1309,12 +1414,15 @@ document.querySelectorAll('img[data-logo]').forEach((img) => { img.src = LOGO; }
     document.querySelectorAll('input[name="defense"] + span').forEach((sp) => sp.insertAdjacentHTML('beforeend', jpSpan(jpDef(sp.textContent))));
     refreshForm();
   }
+  /* Grades cochés : 1er et 2e dan renvoient tous deux au programme des dan (rangé en « kyū 0 ») */
+  const checkedGrades = () => checkedValues('kyu').map(Number);
+  const checkedKyus = () => [...new Set(checkedGrades().map((k) => (k < 0 ? 0 : k)))];
   const checkedValues = (name) => [...document.querySelectorAll(`input[name="${name}"]:checked`)].map((i) => i.value);
   app.picked = new Set();
 
   /* Techniques correspondant aux kyu, attaques et défenses cochés (sans tenir compte du mode) */
   function inScope() {
-    const kyu = checkedValues('kyu').map(Number), att = checkedValues('attaque'), def = checkedValues('defense');
+    const kyu = checkedKyus(), att = checkedValues('attaque'), def = checkedValues('defense');
     const onlyFund = $('only-fund').checked;
     return app.techniques.filter((t) => (!onlyFund || t.fund) &&
       (!kyu.length || kyu.includes(t.kyu)) && (!att.length || att.includes(t.attaque)) && (!def.length || def.includes(t.defense)));
@@ -1332,7 +1440,7 @@ document.querySelectorAll('img[data-logo]').forEach((img) => { img.src = LOGO; }
 
   /* N’affiche que les attaques et défenses possibles pour les kyu choisis */
   function cascadeChips() {
-    const kyu = checkedValues('kyu').map(Number);
+    const kyu = checkedKyus();
     const byKyu = app.techniques.filter((t) => !kyu.length || kyu.includes(t.kyu));
     const atts = new Set(byKyu.map((t) => t.attaque));
     document.querySelectorAll('input[name="attaque"]').forEach((i) => {
@@ -1346,12 +1454,15 @@ document.querySelectorAll('img[data-logo]').forEach((img) => { img.src = LOGO; }
   }
 
   function kyuList(ks) {
-    const labels = ks.sort((a, b) => b - a).map((k) => kyuLabel(k).replace('\u00a0kyū', ''));
-    return labels.length === 1 ? `du ${labels[0]} kyū` : `des ${labels.slice(0, -1).join(', ')} et ${labels[labels.length - 1]} kyū`;
+    const dan = ks.includes(0), k = ks.filter((x) => x !== 0).sort((a, b) => b - a);
+    const labels = k.map((x) => kyuLabel(x).replace('\u00a0kyū', ''));
+    const kyuPart = !labels.length ? '' : labels.length === 1 ? `du ${labels[0]}\u00a0kyū` : `des ${labels.slice(0, -1).join(', ')} et ${labels[labels.length - 1]}\u00a0kyū`;
+    if (!dan) return kyuPart;
+    return kyuPart ? `${kyuPart} et des dan` : 'des dan (shodan à yondan)';
   }
   /* Ordre des lignes et colonnes, repris du programme d’examen du club */
   const ORDER_DEF = ['ikkyo', 'nikyo', 'sankyo', 'uchi kaiten sankyo', 'yonkyo', 'gokyo', 'irimi nage', 'kote gaeshi', 'shiho nage', 'ude kime nage',
-    'kaiten nage', 'tenchi nage', 'koshi nage', 'kokyu nage', 'aiki kokyu nage', 'kokyu ho', 'aiki otoshi', 'kiri otoshi', 'sumi otoshi', 'juji garami', 'jugi garami', 'ude garami', 'hiji kime osae'];
+    'kaiten nage', 'tenchi nage', 'koshi nage', 'kokyu nage', 'aiki kokyu nage', 'kokyu ho', 'aiki otoshi', 'kiri otoshi', 'sumi otoshi', 'juji garami', 'jugi garami', 'ude garami', 'hiji kime osae', 'ushiro kiri otoshi'];
   const ORDER_ATT = ['aihanmi katate dori', 'gyaku hanmi katate dori', 'katate dori', 'kata dori', 'mune dori', 'ryote dori', 'ryo kata dori', 'katate ryote dori',
     'kata dori menuchi', 'sode dori', 'ushiro ryote dori', 'ushiro ryo hiji dori', 'ushiro ryo kata dori', 'ushiro kubishime katate dori', 'ushiro eri dori',
     'jodan tsuki', 'chudan tsuki', 'gedan tsuki', 'shomen uchi', 'yokomen uchi', 'men uchi'];
@@ -1371,6 +1482,13 @@ document.querySelectorAll('img[data-logo]').forEach((img) => { img.src = LOGO; }
   function statusText(t) { const l = lastEval(t.id); return l ? `${l.n} · ${LEVELS[l.n].label}, ${ago(l.d)}` : 'Non notée'; }
 
   function gridHtml(list, multiKyu) {
+    const groups = WAZA_ORDER.map((w) => [w, list.filter((t) => wazaOf(t) === w)]).filter(([, l]) => l.length);
+    if (groups.length > 1 || (groups.length === 1 && groups[0][0] !== 'tachi')) {
+      return groups.map(([w, l]) => `<h4 class="waza-title">${WAZA[w].label} <span class="jp" lang="ja">${WAZA[w].jp}</span></h4>${gridTable(l, multiKyu)}`).join('');
+    }
+    return gridTable(list, multiKyu);
+  }
+  function gridTable(list, multiKyu) {
     const cols = [...new Set(list.map((t) => t.attaque))].sort(byRank(rankAtt));
     const rows = [...new Set(list.map((t) => t.defense))].sort(byRank(rankDef));
     const cell = new Map();
@@ -1381,44 +1499,62 @@ document.querySelectorAll('img[data-logo]').forEach((img) => { img.src = LOGO; }
       if (!ts.length) return '<td></td>';
       return `<td class="has"><span class="cells">${ts.map((t) => {
         const l = lastEval(t.id);
-        return `<button type="button" class="cell${l ? ' noted' : ''}${t.fund ? ' fund-cell' : ''}${modeAllows(t) || app.picked.size ? '' : ' dim'}" data-id="${esc(t.id)}" aria-pressed="${app.picked.has(t.id)}"${l ? ` style="--c:${color(l.n)}"` : ''} title="${esc(`${a} — ${d}, ${kyuLabel(t.kyu)}${t.fund ? ', technique fondamentale' : ''} : ${statusText(t)}`)}" aria-label="${esc(`${a}, ${d}, ${kyuLabel(t.kyu)}${t.fund ? ', technique fondamentale' : ''}, ${statusText(t)}`)}">${multiKyu ? t.kyu : ''}</button>`;
+        return `<button type="button" class="cell${l ? ' noted' : ''}${t.fund ? ' fund-cell' : ''}${modeAllows(t) || app.picked.size ? '' : ' dim'}" data-id="${esc(t.id)}" aria-pressed="${app.picked.has(t.id)}"${l ? ` style="--c:${color(l.n)}"` : ''} title="${esc(`${a} — ${d}, ${kyuLabel(t.kyu)}${t.fund ? ', technique fondamentale' : ''} : ${statusText(t)}`)}" aria-label="${esc(`${a}, ${d}, ${kyuLabel(t.kyu)}${t.fund ? ', technique fondamentale' : ''}, ${statusText(t)}`)}">${multiKyu ? (t.kyu === 0 ? 'D' : t.kyu) : ''}</button>`;
       }).join('')}</span></td>`;
     }).join('')}</tr>`).join('');
     return `<div class="matrix-wrap"><table class="matrix"><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
   }
   function listHtml(list, multiKyu) {
     const groups = new Map();
-    for (const t of list.slice().sort((a, b) => byRank(rankAtt)(a.attaque, b.attaque) || byRank(rankDef)(a.defense, b.defense) || b.kyu - a.kyu)) {
-      if (!groups.has(t.attaque)) groups.set(t.attaque, []);
-      groups.get(t.attaque).push(t);
+    const wr = (t) => WAZA_ORDER.indexOf(wazaOf(t));
+    for (const t of list.slice().sort((a, b) => wr(a) - wr(b) || byRank(rankAtt)(a.attaque, b.attaque) || byRank(rankDef)(a.defense, b.defense) || b.kyu - a.kyu)) {
+      const k = `${wazaOf(t)}|${t.attaque}`;
+      if (!groups.has(k)) groups.set(k, []);
+      groups.get(k).push(t);
     }
-    return `<div class="program-grid">${[...groups].map(([att, ts]) => `<div class="att">${attHtml(att)}</div><div class="defs">${ts.map((t) => {
+    return `<div class="program-grid">${[...groups].map(([k, ts]) => `<div class="att">${wazaTag(ts[0])}${attHtml(ts[0].attaque)}</div><div class="defs">${ts.map((t) => {
       const l = lastEval(t.id);
       return `<button type="button" class="tech-pill${modeAllows(t) || app.picked.size ? '' : ' dim'}" data-id="${esc(t.id)}" aria-pressed="${app.picked.has(t.id)}" title="${esc(statusText(t))}"${l ? ` style="--c:${color(l.n)}"` : ''}><i class="dot" aria-hidden="true"></i>${fundMark(t)}${defHtml(t.defense)}${multiKyu ? ` <small>${kyuLabel(t.kyu)}</small>` : ''}<span class="sr-only">, ${esc(statusText(t))}</span></button>`;
     }).join('')}</div>`).join('')}</div>`;
   }
 
+  function programExam(kyu) {
+    if (kyu.length !== 1) return '';
+    const g0 = kyu[0];
+    kyu = [g0 < 0 ? 0 : g0];
+    const e = kyu[0] === 0 ? EXAMS[String(g0)] : EXAMS[kyu[0]];
+    const extra = kyu[0] === 0 ? ['À l’examen : suwari, hanmi handachi, tachi puis ushiro waza', 'armes et randori selon le grade'] : (e && e.extra) || [];
+    return extra.length ? `<p class="program-exam">${kyu[0] === 0 ? '' : 'À l’examen, en plus : '}${esc(extra.join(' ; '))}. <button type="button" class="link-btn" data-go-exam="${g0}">Passage de grade</button></p>` : '';
+  }
   function renderProgram() {
-    const kyu = checkedValues('kyu').map(Number), filtersOn = kyu.length || checkedValues('attaque').length || checkedValues('defense').length || $('only-fund').checked;
+    const kyu = checkedKyus(), grades = checkedGrades(), filtersOn = kyu.length || checkedValues('attaque').length || checkedValues('defense').length || $('only-fund').checked;
     const list = inScope();
     for (const id of [...app.picked]) if (!list.some((t) => t.id === id)) app.picked.delete(id);
     if (!filtersOn) {
-      $('program').innerHTML = '<p class="program-empty">Choisis un kyū.</p>';
+      $('program').innerHTML = '<p class="program-empty">Choisis un grade.</p>';
       return;
     }
     if (!list.length) { $('program').innerHTML = '<p class="program-empty">Aucune technique ne correspond à ces filtres.</p>'; return; }
     const multiKyu = new Set(list.map((t) => t.kyu)).size > 1;
     const acquired = list.filter((t) => { const l = lastEval(t.id); return l && l.n >= 3; }).length;
-    const title = kyu.length ? `Programme ${kyuList(kyu.slice())}${kyu.length === 1 && BELTS[kyu[0]] ? `, ${BELTS[kyu[0]]}` : ''}` : 'Techniques correspondantes';
+    const danSel = grades.filter((g) => g < 0).sort((a, b) => b - a);
+    const danTitle = danSel.length === 1 ? `du ${gradeLabel(danSel[0])}` : 'des 1er et 2e dan';
+    const kyuOnly = kyu.filter((k) => k !== 0);
+    const title = !kyu.length ? 'Techniques correspondantes'
+      : !danSel.length ? `Programme ${kyuList(kyu.slice())}${kyu.length === 1 && BELTS[kyu[0]] ? `, ${BELTS[kyu[0]]}` : ''}`
+      : kyuOnly.length ? `Programme ${kyuList(kyuOnly)} et ${danTitle}` : `Programme ${danTitle}`;
     const grid = app.programView === 'grid';
     $('program').innerHTML = `
       <div class="program-head"><h3>${title}</h3>
         <div class="view-toggle" role="group" aria-label="Affichage du programme"><button type="button" class="ctl" data-view="grid" aria-pressed="${grid}">Grille</button><button type="button" class="ctl" data-view="list" aria-pressed="${!grid}">Liste</button></div></div>
+      ${programExam(grades)}
       <p class="program-help">${plural(list.length, 'technique')}, ${acquired} acquise${acquired > 1 ? 's' : ''}. ${app.picked.size ? `${app.picked.size} sélectionnée${app.picked.size > 1 ? 's' : ''}. <button type="button" class="link-btn" id="btn-unpick">Effacer ma sélection</button>` : ''}</p>
       ${grid ? gridHtml(list, multiKyu) : listHtml(list, multiKyu)}
       <div class="legend">${[4, 3, 2, 1].map((n) => `<span style="--c:${color(n)}">${LEVELS[n].label}</span>`).join('')}<span style="--c:var(--empty)">Non notée</span>${list.some((t) => t.fund) ? '<span class="fund-legend"><span class="fund">♥</span> Technique fondamentale</span>' : ''}</div>`;
   }
   $('program').addEventListener('click', (e) => {
+    const ge = e.target.closest('[data-go-exam]');
+    if (ge) { app.examGrade = Number(ge.dataset.goExam); renderExam(); goTo('sec-exam'); return; }
     if (e.target.closest('#btn-unpick')) { app.picked.clear(); refreshForm(); return; }
     const v = e.target.closest('[data-view]');
     if (v) { app.programView = v.dataset.view; renderProgram(); document.querySelector(`[data-view="${app.programView}"]`).focus(); return; }
@@ -1469,12 +1605,15 @@ document.querySelectorAll('img[data-logo]').forEach((img) => { img.src = LOGO; }
     ['random', 'Ordre aléatoire', 'Les techniques arrivent dans le désordre, comme lors d’un examen.'],
     ['column', 'Par technique d’attaque (colonne)', 'Toutes les défenses sur une même attaque, puis l’attaque suivante, dans l’ordre des colonnes de la grille.'],
     ['row', 'Par technique de défense (ligne)', 'Une même technique de défense sur toutes ses attaques, puis la suivante, dans l’ordre des lignes de la grille.'],
+    ['exam', 'Comme à l’examen', 'Suwari, hanmi handachi, tachi puis ushiro waza, au hasard dans chaque partie.'],
   ];
   function arrange(list, order) {
-    const byAtt = (a, b) => rankAtt(a.attaque) - rankAtt(b.attaque) || collator.compare(a.attaque, b.attaque);
-    const byDef = (a, b) => rankDef(a.defense) - rankDef(b.defense) || collator.compare(a.defense, b.defense);
+    const wr = (t) => WAZA_ORDER.indexOf(wazaOf(t));
+    const byAtt = (a, b) => wr(a) - wr(b) || rankAtt(a.attaque) - rankAtt(b.attaque) || collator.compare(a.attaque, b.attaque);
+    const byDef = (a, b) => wr(a) - wr(b) || rankDef(a.defense) - rankDef(b.defense) || collator.compare(a.defense, b.defense);
     if (order === 'column') return list.slice().sort((a, b) => byAtt(a, b) || byDef(a, b) || b.kyu - a.kyu);
     if (order === 'row') return list.slice().sort((a, b) => byDef(a, b) || byAtt(a, b) || b.kyu - a.kyu);
+    if (order === 'exam') return WAZA_ORDER.flatMap((w) => pick(list.filter((t) => wazaOf(t) === w), list.length, false));
     return pick(list, list.length, false);
   }
   const currentOrder = () => checkedValues('order')[0] || 'random';
@@ -1504,7 +1643,7 @@ document.querySelectorAll('img[data-logo]').forEach((img) => { img.src = LOGO; }
      on la charge donc entièrement en mémoire, ce qui rend l’avance et le retour possibles. */
   const video = $('video');
   let videoToken = 0, blobUrl = null;
-  const videoName = (t) => `${t.attaque} - ${t.defense}.mp4`;
+  const videoName = (t) => t.video || `${t.attaque} - ${t.defense}.mp4`;
   function stopVideo() {
     videoToken++;
     video.pause();
@@ -1589,7 +1728,7 @@ document.querySelectorAll('img[data-logo]').forEach((img) => { img.src = LOGO; }
     $('q-attaque').innerHTML = attHtml(t.attaque);
     $('q-defense').innerHTML = defHtml(t.defense);
     const last = lastEval(t.id);
-    $('q-meta').innerHTML = `<span>${kyuLabel(t.kyu)}</span>` + (t.fund ? '<span><span class="fund">♥</span> Technique fondamentale</span>' : '') + (last ? `<span>Dernière fois : ${tag(last.n)} ${ago(last.d)}</span>` : '<span>Jamais notée</span>');
+    $('q-meta').innerHTML = `<span>${t.kyu === 0 ? 'Programme des dan' : kyuLabel(t.kyu)}</span>` + (t.waza ? `<span>${WAZA[t.waza].label} <span class="jp" lang="ja">${WAZA[t.waza].jp}</span></span>` : '') + (t.indication && t.kyu === 0 ? `<span>${esc(t.indication)}</span>` : '') + (t.fund ? '<span><span class="fund">♥</span> Technique fondamentale</span>' : '') + (last ? `<span>Dernière fois : ${tag(last.n)} ${ago(last.d)}</span>` : '<span>Jamais notée</span>');
     document.querySelectorAll('.rate').forEach((b) => b.setAttribute('aria-pressed', 'false'));
     $('q-comment').value = '';
     $('btn-next').disabled = true;
@@ -1754,7 +1893,7 @@ document.querySelectorAll('img[data-logo]').forEach((img) => { img.src = LOGO; }
       if (since) parts.push(`Tu pratiques l’aïkido depuis ${since}`);
       if (g) parts.push(gradeSince ? `${parts.length ? 'et tu es' : 'Tu es'} ${gradeLabel(g)} depuis ${gradeSince}` : `${parts.length ? 'et tu es' : 'Tu es'} ${gradeLabel(g)}`);
       lead = parts.length ? parts.join(' ') + '.' : '';
-      if (target) lead += ` Prochain objectif : le ${kyuLabel(target)}.`;
+      if (target != null && target !== 0) lead += ` Prochain objectif : le ${kyuLabel(target)}.`;
       else if (g && gradeAfter(g)) lead += ` Prochain objectif : le ${gradeLabel(gradeAfter(g))}.`;
     } else {
       lead = '';
@@ -1789,13 +1928,14 @@ document.querySelectorAll('img[data-logo]').forEach((img) => { img.src = LOGO; }
     if (!g && !profile().prenom) {
       cards.push({ title: 'Profil à compléter', text: 'Grade et dates de passage.', btn: 'Compléter', go: showProfile });
     }
-    if (target) {
+    if (target != null) {
       const list = all.filter((t) => t.kyu === target), todo = list.filter((t) => !acquired(t));
-      const label = `Préparation du ${kyuLabel(target)}`;
-      if (todo.length) cards.push({ title: `Préparer le ${kyuLabel(target)}`, text: `${list.length - todo.length} / ${list.length} acquises.`, btn: 'Les réviser', go: session(todo, label) });
+      const targetName = target === 0 ? gradeLabel(gradeAfter(g) || -1).replace(/ \(.*\)$/, '') : kyuLabel(target);
+      const label = `Préparation du ${targetName}`;
+      if (todo.length) cards.push({ title: `Préparer le ${targetName}`, text: `${list.length - todo.length} / ${list.length} acquises.`, btn: 'Les réviser', go: session(todo, label) });
       const fund = list.filter((t) => t.fund), fundTodo = fund.filter((t) => !acquired(t));
-      if (fundTodo.length) cards.push({ title: `Fondamentaux du ${kyuLabel(target)}`, text: `${fund.length - fundTodo.length} / ${fund.length} acquises.`, btn: 'Les réviser', go: session(fundTodo, `Fondamentaux du ${kyuLabel(target)}`) });
-      if (!todo.length && list.length) cards.push({ title: `${kyuLabel(target)} acquis`, text: 'Toutes notées 3 ou 4.', btn: 'Les réviser', go: session(list, label) });
+      if (fundTodo.length) cards.push({ title: `Fondamentaux du ${targetName}`, text: `${fund.length - fundTodo.length} / ${fund.length} acquises.`, btn: 'Les réviser', go: session(fundTodo, `Fondamentaux du ${targetName}`) });
+      if (!todo.length && list.length) cards.push({ title: `${targetName} acquis`, text: 'Toutes notées 3 ou 4.', btn: 'Les réviser', go: session(list, label) });
     }
     if (g) {
       const stale = all.filter((t) => t.kyu >= g).filter((t) => { const l = lastEval(t.id); return !l || l.n <= 2 || daysAgo(l.d) > 30; });
@@ -1850,10 +1990,108 @@ document.querySelectorAll('img[data-logo]').forEach((img) => { img.src = LOGO; }
     f.classList.add('talk');
     clearTimeout(f._talk); f._talk = setTimeout(() => f.classList.remove('talk'), 3000);
   });
+
+  /* ---------- Passage de grade ---------- */
+  /* Kyū : compléments de la fiche d’examen Aïkido Montigny (2019).
+     Shodan : même fiche (déroulement des examens de 1er et 2e dan, modalités).
+     Nidan : règlement des grades (validé par arrêté du 22/12/2025), résumé. */
+  const EXAMS = {
+    5: { extra: [] },
+    4: { extra: ['Premier principe du kata', 'Randori avec un partenaire'] },
+    3: { extra: ['Trois premiers principes du kata', 'Randori avec un partenaire'] },
+    2: { extra: ['Quatre premiers principes du kata', 'Randori avec un partenaire'] },
+    1: { extra: ['Quatre premiers principes du kata', 'Randori avec deux partenaires, sur attaques imposées', 'Programme de toutes les autres ceintures'] },
+    '-1': {
+      steps: ['Suwari waza (à genoux)', 'Hanmi handachi waza (attaquant debout, défenseur à genoux)', 'Tachi waza (debout)', 'Ushiro waza (attaques arrière)',
+        'Deux formes choisies par le jury : tanto dori (couteau), jo dori ou jo nage waza (bâton), randori avec deux partenaires sur attaques imposées'],
+      extra: ['Quatre premiers principes du kata', 'Programme de toutes les ceintures'],
+      rules: ['Âge minimum : 16 ans', 'Au moins un an après le 1er kyū', 'Dossier à la ligue un mois avant l’examen',
+        'Pièces : passeport sportif (timbres de licence, page des stages avec trois stages homologués), formulaire signé du professeur, certificat médical, chèque à l’ordre de la ligue',
+        'Le jour de l’examen : passeport, certificat médical et armes'],
+      source: 'Fiche d’examen Aïkido Montigny, septembre 2019',
+    },
+    '-2': {
+      level: 'Au travail du 1er dan s’ajoutent rapidité et puissance, avec une détermination mentale plus affirmée. Le jury doit percevoir une mise en forme et une orientation du travail plus claires.',
+      checks: ['Compétence et approfondissement des éléments du 1er dan, comme tori et comme uke',
+        'Connaissance plus approfondie de la nomenclature',
+        'Progression nette en fluidité, en unité du corps et dans la gestion du ma-ai',
+        'Exigence accrue sur l’ensemble des critères d’évaluation'],
+      steps: ['Suwari waza (à genoux) et hanmi handachi waza : environ 5 minutes pour les deux', 'Tachi waza (debout), sur saisies et sur frappes', 'Ushiro waza (attaques arrière)',
+        'Deux ou trois formes choisies par le jury : tanto dori (couteau), jo dori (contre bâton), jo nage waza (projections avec bâton)',
+        'Randori ninin gake, avec deux partenaires'],
+      rules: ['Âge minimum : 18 ans', 'Au moins deux ans après le 1er dan', 'Dossier à la ligue deux mois avant l’examen',
+        'Pièces : passeport sportif (timbres de licence, page des grades dan, page des stages avec trois stages homologués), formulaire signé du professeur, certificat médical, chèque à l’ordre de la ligue',
+        'Le jour de l’examen : passeport, certificat médical et armes'],
+      source: 'Règlement des grades (arrêté du 22/12/2025) ; modalités : fiche Aïkido Montigny, 2019',
+    },
+  };
+  /* Termes du jury (règlement des grades, annexe I), en résumé */
+  const LEXICON = [
+    ['Shisei', '姿勢', 'posture et attitude : verticalité, centrage, unité du corps'],
+    ['Kamae', '構え', 'garde et vigilance, le placement d’où l’on part'],
+    ['Hanmi', '半身', 'position asymétrique, une jambe en avant'],
+    ['Ma-ai', '間合い', 'la distance, avant le contact et tout au long de la technique'],
+    ['Irimi', '入身', 'entrer, pénétrer dans la sphère d’uke'],
+    ['Tenkan', '転換', 's’effacer par un pivot, sans changer de hanmi'],
+    ['Omote, ura', '表・裏', 'devant ou derrière : logique de pression ou de contournement'],
+    ['Tai sabaki', '体捌き', 'le déplacement qui crée l’ouverture et le déséquilibre'],
+    ['Atemi', '当て身', 'la frappe : un moyen de déstabiliser, pas une fin'],
+    ['Kokyu', '呼吸', 'la respiration, la fluidité et le rythme de l’échange'],
+    ['Kokyu ryoku', '呼吸力', 'puissance, respiration et rythme coordonnés'],
+    ['Metsuke', '目付', 'le regard, physique et mental'],
+    ['Arukikata', '歩き方', 'la façon de marcher : liberté et légèreté des appuis'],
+    ['Kiryoku', '気力', 'la détermination, l’engagement dans l’action'],
+    ['Seishin jotai', '精神状態', 'l’état mental'],
+    ['Sokudo', '速度', 'la vivacité dans la disponibilité'],
+    ['Reigisaho', '礼儀作法', 'l’étiquette et le comportement'],
+    ['Kokoro no mochikata', '心の持ち方', 'le contrôle des émotions, la sérénité'],
+    ['Zanshin', '残心', 'la vigilance permanente'],
+  ];
+  const EXAM_GRADES = [5, 4, 3, 2, 1, -1, -2];
+  const examLabel = (g) => g < 0 ? gradeLabel(g) : kyuLabel(g);
+  const examDefault = () => {
+    const g = currentGrade();
+    const next = g == null ? 5 : g > 1 ? g - 1 : gradeAfter(g);
+    return EXAM_GRADES.includes(next) ? next : (g != null && g < -1 ? -2 : 5);
+  };
+  app.examGrade = null;
+  function renderExam() {
+    const g = app.examGrade ?? examDefault();
+    $('exam-chips').innerHTML = EXAM_GRADES.map((k) => `<label class="chip"><input type="radio" name="exam-grade" value="${k}"${k === g ? ' checked' : ''}><span>${esc(examLabel(k))}</span></label>`).join('');
+    const e = EXAMS[g] || {}, list = (arr, ordered) => arr && arr.length ? `<${ordered ? 'ol' : 'ul'}>${arr.map((x) => `<li>${esc(x)}</li>`).join('')}</${ordered ? 'ol' : 'ul'}>` : '';
+    const block = (title, html) => html ? `<div class="exam-block"><h3>${title}</h3>${html}</div>` : '';
+    const prog = g > 0 ? `Le programme technique du ${kyuLabel(g)} (grille de « Nouvelle séance »).` : 'Le programme des dan (grille de « Nouvelle séance », quatre familles de techniques).';
+    $('exam-body').innerHTML =
+      block('Niveau attendu', e.level ? `<p>${esc(e.level)}</p>` : '') +
+      block('À vérifier', list(e.checks)) +
+      block('Déroulement', e.steps ? list(e.steps, true) : `<p>${esc(prog)}</p>`) +
+      block('En plus du programme technique', list(e.extra)) +
+      block('Conditions', list(e.rules)) +
+      `<div class="row"><button type="button" class="btn btn-secondary" id="btn-exam-sim">Simulation d’examen</button></div>` +
+      (g < 0 ? `<details class="lexicon-box" style="margin-top:1.1rem"><summary>Les termes du jury</summary><div class="lexicon">${LEXICON.map(([w, j, d]) => `<div><b>${esc(w)}</b><span class="jp" lang="ja">${j}</span> : ${esc(d)}</div>`).join('')}</div></details>` : '') +
+      `<p class="exam-source">${esc(e.source || 'Fiche d’examen Aïkido Montigny, septembre 2019')}</p>`;
+  }
+  $('exam-chips').addEventListener('change', (e) => { app.examGrade = Number(e.target.value); renderExam(); });
+  $('exam-body').addEventListener('click', (e) => {
+    if (!e.target.closest('#btn-exam-sim')) return;
+    const g = app.examGrade ?? examDefault(), k = g < 0 ? 0 : g;
+    const list = app.techniques.filter((t) => t.kyu === k);
+    if (!list.length) return;
+    // un examen n’interroge que quelques techniques par partie : priorité aux points faibles
+    const PER = k === 0 ? { suwari: 4, hanmi: 3, tachi: 8, ushiro: 4 } : { tachi: 10, suwari: 0, hanmi: 0, ushiro: 0 };
+    const ids = WAZA_ORDER.flatMap((w) => pick(list.filter((t) => wazaOf(t) === w), PER[w] || 0, true)).map((t) => t.id);
+    startSession(ids, `Simulation d’examen : ${examLabel(g)}`);
+  });
+  /* Point d’attention du jour, tiré des critères du jury */
+  function pointOfDay() {
+    const [w, j, d] = LEXICON[Math.floor(Date.now() / 864e5) % LEXICON.length];
+    return `<p class="point">Point d’attention : <b>${esc(w)}</b> <span class="jp" lang="ja">${j}</span>, ${esc(d)}.</p>`;
+  }
+
   function renderAnalysis() {
     const box = $('weak-analysis');
     const noted = app.techniques.filter((t) => lastEval(t.id)).length;
-    if (noted < 4) { box.innerHTML = '<p>Note au moins quatre techniques : je te dirai sur quoi insister.</p>'; return; }
+    if (noted < 4) { box.innerHTML = '<p>Note au moins quatre techniques : je te dirai sur quoi insister.</p>' + pointOfDay(); return; }
     const def = weakestGroup((t) => familyName(t), familyName);
     const att = weakestGroup((t) => rankAtt(t.attaque) === 999 ? t.attaque : rankAtt(t.attaque), attackName);
     let sentence;
@@ -1867,7 +2105,7 @@ document.querySelectorAll('img[data-logo]').forEach((img) => { img.src = LOGO; }
     const day = Math.floor(Date.now() / 864e5);
     const cheer = rising ? 'Tes dernières notes progressent : continue ainsi.' : ENCOURAGEMENTS[day % ENCOURAGEMENTS.length];
     app.analysisGroups = [def, att].filter(Boolean);
-    box.innerHTML = `<p>${esc(sentence)}</p><p class="encourage">${esc(cheer)}</p>` +
+    box.innerHTML = `<p>${esc(sentence)}</p><p class="encourage">${esc(cheer)}</p>` + pointOfDay() +
       (app.analysisGroups.length ? `<div class="row">${app.analysisGroups.map((g, i) =>
         `<button type="button" class="btn btn-secondary" data-analysis="${i}">Réviser ${g === def ? `les ${esc(g.name)}` : `sur ${esc(g.name.toLowerCase())}`}</button>`).join('')}</div>` : '');
     box.hidden = false;
@@ -1898,6 +2136,7 @@ document.querySelectorAll('img[data-logo]').forEach((img) => { img.src = LOGO; }
     const weak = all.filter((t) => { const l = lastEval(t.id); return l && l.n <= 2; })
       .sort((a, b) => lastEval(a.id).n - lastEval(b.id).n || b.kyu - a.kyu).slice(0, 12);
     renderAnalysis();
+    renderExam();
     $('weak-title').hidden = !weak.length;
     $('weak-list').hidden = !weak.length;
     $('weak-list').innerHTML = weak.length
@@ -2043,7 +2282,7 @@ document.querySelectorAll('img[data-logo]').forEach((img) => { img.src = LOGO; }
     const notedIn = (list) => { const n = list.filter((t) => lastEval(t.id)).length; return n ? `${n} notée${n > 1 ? 's' : ''}` : 'aucune notée'; };
     const kyus = [...new Set(app.techniques.map((t) => t.kyu))].sort((a, b) => b - a);
     const opts = [['all', `Toutes les techniques (${notedIn(app.techniques)})`]]
-      .concat(kyus.map((k) => [String(k), `Programme du ${kyuLabel(k)} (${notedIn(app.techniques.filter((t) => t.kyu === k))})`]));
+      .concat(kyus.map((k) => [String(k), `${programName(k).replace(/^p/, 'P')} (${notedIn(app.techniques.filter((t) => t.kyu === k))})`]));
     const keep = $('reset-scope').value;
     $('reset-scope').innerHTML = opts.map(([v, l]) => `<option value="${v}">${esc(l)}</option>`).join('');
     if (opts.some(([v]) => v === keep)) $('reset-scope').value = keep;
@@ -2052,7 +2291,7 @@ document.querySelectorAll('img[data-logo]').forEach((img) => { img.src = LOGO; }
     const v = $('reset-scope').value;
     const list = v === 'all' ? app.techniques : app.techniques.filter((t) => t.kyu === Number(v));
     const ids = list.map((t) => t.id).filter((id) => app.db.evals[id]);
-    const label = v === 'all' ? 'toutes les techniques' : `le programme du ${kyuLabel(Number(v))}`;
+    const label = v === 'all' ? 'toutes les techniques' : `le ${programName(Number(v))}`;
     if (!ids.length) { $('data-msg').textContent = `Aucune note à réinitialiser pour ${label}.`; return; }
     if (!confirm(`Réinitialiser les notes de ${label} (${plural(ids.length, 'technique')}) ?`)) return;
     for (const id of ids) delete app.db.evals[id];
