@@ -1,0 +1,11 @@
+# Sauvegardes personnelles (notes, profil, numéro de licence) : jamais en ligne
+progression-aikido-*.json
+
+# Outils locaux, inutiles sur le site
+*.command
+*.py
+AikidoMontigny-iOS/
+
+# Fichiers système
+.DS_Store
+Thumbs.db
