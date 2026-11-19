@@ -292,7 +292,7 @@ table.matrix { width: 100%; border-collapse: collapse; }
 .splash-text .splash-name { font-size: 1.3em; margin-bottom: .1em; }
 .splash-inner { max-width: none; }
 .splash-line { width: 7rem; height: 2px; background: var(--line); border-radius: 1px; overflow: hidden; margin-top: .4rem; }
-.splash-line i { display: block; height: 100%; width: 100%; background: var(--accent); transform-origin: left; transform: scaleX(0); animation: splash-line 3.5s linear forwards; }
+.splash-line i { display: block; height: 100%; width: 100%; background: var(--accent); transform-origin: left; transform: scaleX(0); animation: splash-line 2.5s linear forwards; }
 @keyframes splash-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 @keyframes splash-line { to { transform: scaleX(1); } }
 @media (prefers-reduced-motion: reduce) {
@@ -517,6 +517,18 @@ header.site .club-item img { width: auto; height: 2.3rem; }
 #btn-sound[aria-pressed="false"] .snd-wave { display: none; }
 #btn-sound[aria-pressed="false"] .snd-off { display: inline; }
 #btn-sound[aria-pressed="true"] { background: var(--surface); color: var(--ink); border-color: var(--line); }
+
+/* Bouton « Reprendre la séance » : une ligne sur ordinateur, deux sur téléphone */
+#btn-resume .resume-sub::before { content: " · "; }
+#btn-resume .resume-sub { font-size: .9em; opacity: .85; }
+@media (max-width: 720px) {
+  #btn-resume { flex-direction: column; align-items: flex-start; gap: .1rem; line-height: 1.25; padding: .5rem 1.1rem; border-radius: 14px; text-align: left; }
+  #btn-resume .resume-main, #btn-resume .resume-sub { display: block; }
+  #btn-resume .resume-sub::before { content: none; }
+}
+/* Profil pendant une séance : visible mais grisé */
+.header-photo.is-disabled { opacity: .45; cursor: default; filter: grayscale(1); }
+.header-photo.is-disabled:hover .header-name { color: inherit; }
 
 /* Profil */
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 1.5rem; row-gap: 0; }
@@ -896,7 +908,7 @@ document.querySelectorAll('img[data-logo2]').forEach((img) => { img.src = LOGO2;
     splash.classList.add('out');
     setTimeout(() => splash.remove(), 700);
   };
-  setTimeout(hide, 3500);
+  setTimeout(hide, 2500);
   splash.addEventListener('click', hide);
   document.addEventListener('keydown', hide, { once: true });
 })();
@@ -1534,7 +1546,8 @@ document.querySelectorAll('img[data-logo2]').forEach((img) => { img.src = LOGO2;
     if (wasHidden) { target.classList.remove('screen-enter'); void target.offsetWidth; target.classList.add('screen-enter'); }
     $('btn-header-home').hidden = name === 'home' || name === 'quiz';
     $('btn-header-profile').hidden = name === 'quiz' || name === 'profile';
-    $('header-photo').style.visibility = name === 'quiz' ? 'hidden' : '';
+    $('header-photo').classList.toggle('is-disabled', name === 'quiz');
+    $('header-photo').disabled = name === 'quiz';
     if (name !== 'quiz') stopVideo();
     if (name !== 'home') stopQuotes();
     $('site-menu').hidden = name === 'quiz';
@@ -2452,7 +2465,7 @@ document.querySelectorAll('img[data-logo2]').forEach((img) => { img.src = LOGO2;
     const open = openSession();
     $('btn-resume').hidden = !open;
     $('paused-info').hidden = !(open && open.items.length);
-    if (open) $('btn-resume').textContent = `Reprendre la séance (technique ${Math.min(open.items.length + 1, open.queue.length)} sur ${open.queue.length})`;
+    if (open) $('btn-resume').innerHTML = `<span class="resume-main">Reprendre la séance</span><span class="resume-sub">Technique ${Math.min(open.items.length + 1, open.queue.length)} sur ${open.queue.length}</span>`;
     refreshForm();
     show('home');
     showSection(app.homeSection);
