@@ -418,6 +418,8 @@ input[type="date"]::-webkit-datetime-edit { padding: 0; }
 
 /* Transitions entre les écrans */
 .screen-enter { animation: screen-in .45s ease both; }
+#screen-home > section.screen-enter { animation-duration: .8s; }            /* d’une rubrique du menu à l’autre */
+#screen-quiz.screen-enter { animation-duration: .8s; }                    /* lancement d’une séance */
 .screen-leave { opacity: 0; transform: translateY(4px); transition: opacity .3s ease, transform .3s ease; }
 .site-menu.screen-enter { animation-duration: .6s; }
 @keyframes screen-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
@@ -509,6 +511,12 @@ header.site .club-item img { width: auto; height: 2.3rem; }
 .kata-player { position: relative; aspect-ratio: 16 / 9; max-width: 40rem; margin-top: .6rem; border-radius: 10px; overflow: hidden; background: #111317; }
 .kata-player video { display: block; width: 100%; height: 100%; object-fit: contain; }
 .kata-player .video-msg .btn { background: var(--surface); }
+
+/* Bouton des sons */
+#btn-sound .snd-off { display: none; }
+#btn-sound[aria-pressed="false"] .snd-wave { display: none; }
+#btn-sound[aria-pressed="false"] .snd-off { display: inline; }
+#btn-sound[aria-pressed="true"] { background: var(--surface); color: var(--ink); border-color: var(--line); }
 
 /* Profil */
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 1.5rem; row-gap: 0; }
@@ -754,6 +762,7 @@ button, .chip, .cell, .rate { -webkit-tap-highlight-color: transparent; touch-ac
         <button type="button" class="ctl" id="btn-pause" title="Revenir à l’accueil ; la séance reprendra ici (Échap)">Mettre en pause</button>
         <button type="button" class="ctl" id="btn-stop">Terminer</button>
         <button type="button" class="ctl ctl-danger" id="btn-cancel">Annuler</button>
+        <button type="button" class="ctl ctl-icon" id="btn-sound" aria-pressed="true" aria-label="Sons" data-tip="Sons activés"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z"/><path class="snd-wave" d="M15.5 9.2a4 4 0 0 1 0 5.6"/><path class="snd-wave" d="M18 7a7 7 0 0 1 0 10"/><path class="snd-off" d="m16 9.5 5 5M21 9.5l-5 5"/></svg></button>
       </div>
     </div>
     <div class="steps" id="steps" aria-hidden="true"></div>
@@ -1435,7 +1444,7 @@ document.querySelectorAll('img[data-logo2]').forEach((img) => { img.src = LOGO2;
     app.beforeProfile = null;
     if (prev.name === 'report') { updateIdentity(); show('report'); }
     else showHome();
-    requestAnimationFrame(() => requestAnimationFrame(() => window.scrollTo({ top: prev.y, behavior: 'instant' })));
+    window.scrollTo(0, 0);
   }
   function showProfile() {
     updateLogin();
@@ -1481,15 +1490,23 @@ document.querySelectorAll('img[data-logo2]').forEach((img) => { img.src = LOGO2;
   $('btn-header-profile').addEventListener('click', showProfile);
 
   /* ---------- Menu des rubriques ---------- */
+  /* Une seule rubrique affichée à la fois, avec un fondu léger */
+  const HOME_SECTIONS = ['sec-hero', 'sec-weak', 'new-session', 'sec-exam', 'sec-overview', 'sec-hist', 'sec-data'];
+  app.homeSection = 'sec-hero';
+  function showSection(id) {
+    if (!HOME_SECTIONS.includes(id)) id = 'sec-hero';
+    app.homeSection = id;
+    for (const sid of HOME_SECTIONS) $(sid).hidden = sid !== id;
+    const el = $(id);
+    el.classList.remove('screen-enter'); void el.offsetWidth; el.classList.add('screen-enter');
+    markMenu(id);
+    window.scrollTo(0, 0);
+    const h = el.querySelector('h2'); if (h) { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); }
+  }
   function goTo(id) {
     if (id === 'profile') return showProfile();
-    const go = () => {
-      const el = $(id); if (!el) return;
-      el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
-      const h = el.querySelector('h2'); if (h) { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); }
-      markMenu(id); spyLock = Date.now() + 1000;
-    };
-    if ($('screen-home').hidden) { showHome(); requestAnimationFrame(go); } else go();
+    app.homeSection = id;
+    if ($('screen-home').hidden) showHome(); else showSection(id);
   }
   $('site-menu').addEventListener('click', (e) => { const b = e.target.closest('[data-go]'); if (b) goTo(b.dataset.go); });
   function markMenu(id) {
@@ -1508,7 +1525,7 @@ document.querySelectorAll('img[data-logo2]').forEach((img) => { img.src = LOGO2;
     if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) current = SPY[SPY.length - 1];
     markMenu(current);
   }
-  addEventListener('scroll', () => { if (!spyFrame) spyFrame = requestAnimationFrame(spyNow); }, { passive: true });
+
 
   /* ---------- Écrans ---------- */
   function show(name) {
@@ -1522,7 +1539,7 @@ document.querySelectorAll('img[data-logo2]').forEach((img) => { img.src = LOGO2;
     if (name !== 'home') stopQuotes();
     $('site-menu').hidden = name === 'quiz';
     if (menuWasHidden && name !== 'quiz') { const m = $('site-menu'); m.classList.remove('screen-enter'); void m.offsetWidth; m.classList.add('screen-enter'); }
-    if (name === 'profile') markMenu('profile'); else if (name === 'report') markMenu(''); else if (name === 'home') { spyLock = 0; requestAnimationFrame(spyNow); }
+    if (name === 'profile') markMenu('profile'); else if (name === 'report') markMenu(''); 
     window.scrollTo(0, 0);
   }
 
@@ -1795,10 +1812,7 @@ document.querySelectorAll('img[data-logo2]').forEach((img) => { img.src = LOGO2;
     const chosen = pick(list, Math.min(max, list.length), mode === 'faibles');
     startSession(arrange(chosen, order).map((t) => t.id), MODES.find((m) => m[0] === mode)[1] + orderLabel);
   });
-  $('btn-hero-start').addEventListener('click', () => {
-    $('new-session').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    $('t-new').focus({ preventScroll: true });
-  });
+  $('btn-hero-start').addEventListener('click', () => goTo('new-session'));
 
   /* ---------- Lecteur vidéo ---------- */
   /* Sur un serveur local simple, le navigateur ne peut pas se déplacer dans la vidéo :
@@ -1814,6 +1828,13 @@ document.querySelectorAll('img[data-logo2]').forEach((img) => { img.src = LOGO2;
   }
   function videoMessage(text) { $('video-msg-text').textContent = text; $('video-msg').hidden = !text; }
   function startPlayback() {
+    const delay = app.launchDelay || 0;
+    if (delay) {
+      app.launchDelay = 0;
+      const token = videoToken;
+      setTimeout(() => { if (token === videoToken && !$('screen-quiz').hidden) startPlayback(); }, delay);
+      return;
+    }
     video.playbackRate = $('ctl-slow').getAttribute('aria-pressed') === 'true' ? 0.5 : 1;
     video.loop = $('ctl-loop').getAttribute('aria-pressed') === 'true';
     video.muted = false;
@@ -1861,6 +1882,58 @@ document.querySelectorAll('img[data-logo2]').forEach((img) => { img.src = LOGO2;
   });
 
   /* ---------- Séance ---------- */
+
+  /* ---------- Sons paisibles (synthétisés, aucun fichier) ----------
+     Un bol chantant : quelques harmoniques non entières qui s’éteignent lentement. */
+  const Sound = {
+    ctx: null,
+    enabled() { return !(app.db && app.db.settings && app.db.settings.sound === false); },
+    context() {
+      if (!this.ctx) { const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return null; this.ctx = new AC(); }
+      if (this.ctx.state === 'suspended') this.ctx.resume();
+      return this.ctx;
+    },
+    /* Clic de bois (fichier fourni, 90 ms), décodé une fois puis rejoué à différentes hauteurs */
+    CLIC: 'data:audio/wav;base64,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uv+6/7n/uf+5/7r/uv+7/7z/vv+//8H/w//F/8j/yv/N/9D/1P/X/9r/3v/i/+b/6v/u//L/9v/6//7/AgAGAAoADgASABYAGQAdACAAJAAnACoALQAvADIANAA2ADgAOgA7AD0APgA+AD8APwA/AD8APwA/AD4APQA8ADsAOQA4ADYANAAyAC8ALQAqACgAJQAiAB8AHAAZABYAEwAPAAwACQAGAAIA///8//n/9f/y/+//7P/p/+f/5P/h/9//3P/a/9j/1v/U/9L/0P/P/87/zf/M/8v/yv/K/8n/yf/J/8n/yv/K/8v/zP/N/87/z//Q/9L/1P/W/9j/2v/c/9//4f/k/+b/6f/s/+//8v/1//j/+////wIABQAIAAsADgARABQAFwAaAB0AIAAiACUAJwApACsALQAvADAAMgAzADQANQA2ADYANgA3ADYANgA2ADUANAAzADIAMAAvAC0AKwApACcAJQAiACAAHQAaABcAFQASAA8ADAAJAAUAAgD///z/+f/2//P/8P/u/+v/6P/m/+P/4f/f/93/2//Z/9f/1v/U/9P/0v/R/9H/0P/Q/9D/0P/Q/9D/0f/R/9L/0//U/9X/1v/Y/9n/2//d/9//4f/j/+X/5//p/+z/7v/x//P/9f/4//r//f///wIABAAHAAkADAAOABAAEgAVABcAGQAbABwAHgAgACEAIwAkACUAJgAnACgAKQAqACoAKgArACsAKwAqACoAKgApACgAJwAnACUAJAAjACEAIAAeABwAGwAZABcAFAASABAADgALAAkABwAEAAIA///9//r/+P/1//P/8f/u/+z/6v/o/+b/5P/j/+H/3//e/93/3P/b/9r/2f/Y/9j/2P/Y/9j/2P/Y/9j/2f/a/9r/2//c/97/3//g/+L/5P/l/+f/6f/r/+3/7//x//P/9f/3//r//P/+/wAAAgAEAAYACAAKAAwADgAQABIAEwAVABYAGAAZABoAGwAcAB0AHgAeAB8AHwAgACAAIAAgACAAHwAfAB8AHgAeAB0AHAAbABoAGQAYABcAFgAVABMAEgARAA8ADgAMAAsACQAHAAYABAADAAEAAAD+//3/+//6//j/9//1//T/8//y//D/7//u/+3/7P/r/+v/6v/p/+n/6P/o/+f/5//n/+f/5//n/+f/5//o/+j/6P/p/+r/6v/r/+z/7f/u/+//8P/x//L/8//0//X/9//4//n/+//8//3///8AAAEAAwAEAAUABwAIAAkACgALAA0ADgAPAA8AEAARABIAEwATABQAFAAUABUAFQAVABUAFQAVABUAFQAUABQAFAATABIAEgARABAAEAAPAA4ADQAMAAsACgAJAAgABwAGAAUABAACAAEAAAD///7//f/8//v/+v/5//j/+P/3//b/9f/1//T/8//z//L/8v/y//H/8f/x//H/8P/w//D/8P/x//H/8f/x//H/8v/y//P/8//z//T/9f/1//b/9v/3//j/+P/5//r/+//7//z//f/+//7///8AAAEAAQACAAMAAwAEAAUABQAGAAcABwAIAAgACQAJAAkACgAKAAsACwALAAsACwALAAwADAAMAAwACwALAAsACwALAAsACgAKAAoACQAJAAgACAAHAAcABgAGAAUABQAEAAQAAwACAAIAAQABAAAA//////7//v/9//3//P/8//v/+//6//r/+v/5//n/+f/4//j/+P/4//j/9//3//f/9//3//f/+P/4//j/+P/4//j/+f/5//n/+f/6//r/+v/7//v//P/8//z//f/9//7//v////////8AAAAAAQABAAEAAgACAAIAAwADAAMABAAEAAQABAAEAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAEAAQABAAEAAQAAwADAAMAAwADAAIAAgACAAIAAQABAAEAAQAAAAAAAAAAAAAA//////////////7//v/+//7//v/+//7//f/9//3//f/9//3//f/9//3//f/9//3//f/9//3//f/9//3//v/+//7//v/+//7//v/+//7//////////////////////wAAAAAAAAAAAAAAAAAAAAAAAAAAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=',
+    clicBuf: null,
+    async clicBuffer() {
+      if (this.clicBuf) return this.clicBuf;
+      const ctx = this.context(); if (!ctx) return null;
+      const bin = atob(this.CLIC.split(',')[1]), bytes = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      this.clicBuf = await new Promise((ok, ko) => ctx.decodeAudioData(bytes.buffer, ok, ko));
+      return this.clicBuf;
+    },
+    async clic(when = 0, rate = 1, volume = 0.6) {
+      const ctx = this.context(); if (!ctx) return;
+      const buf = await this.clicBuffer(); if (!buf) return;
+      const src = ctx.createBufferSource(), g = ctx.createGain();
+      src.buffer = buf; src.playbackRate.value = rate; g.gain.value = volume;
+      src.connect(g); g.connect(ctx.destination);
+      src.start(ctx.currentTime + 0.02 + when);
+    },
+    play(kind) {
+      if (!this.enabled()) return;
+      try {
+        if (kind === 'start') this.clic(0, 1, 0.6);                                                  // un clic
+        else if (kind === 'pause') this.clic(0, 0.9, 0.4);                                          // plus grave, plus doux
+        else if (kind === 'end') { this.clic(0, 1, 0.55); this.clic(0.4, 1, 0.55); }                // deux clics, comme en fin de cours
+        else if (kind === 'cancel') this.clic(0, 0.85, 0.35);
+      } catch {}
+    },
+  };
+  function updateSoundButton() {
+    const on = Sound.enabled(), b = $('btn-sound');
+    b.setAttribute('aria-pressed', String(on));
+    b.dataset.tip = on ? 'Sons activés' : 'Sons coupés';
+  }
+  $('btn-sound').addEventListener('click', () => {
+    app.db.settings = app.db.settings || {};
+    app.db.settings.sound = !Sound.enabled();
+    saveDb(); updateSoundButton();
+    if (Sound.enabled()) Sound.play('pause');
+  });
+
   function startSession(ids, label) {
     if (!ids.length) return;
     const paused = app.db.sessions.find((x) => !x.end && x.items.length);
@@ -1872,6 +1945,9 @@ document.querySelectorAll('img[data-logo2]').forEach((img) => { img.src = LOGO2;
     const s = { id: Date.now().toString(36), start: new Date().toISOString(), end: null, mode: label, queue: ids, items: [] };
     app.db.sessions.push(s); saveDb();
     app.session = s;
+    app.launchDelay = 800;
+    Sound.play('start');
+    updateSoundButton();
     show('quiz'); renderQuestion();
   }
   const openSession = () => app.db.sessions.find((s) => !s.end) || null;
@@ -1972,6 +2048,7 @@ document.querySelectorAll('img[data-logo2]').forEach((img) => { img.src = LOGO2;
   function pauseSession() {
     if (!app.session || $('screen-quiz').classList.contains('screen-leave')) return;
     rememberPending();
+    Sound.play('pause');
     app.session = null; app.current = null;
     leaveQuiz(showHome);
   }
@@ -1980,6 +2057,7 @@ document.querySelectorAll('img[data-logo2]').forEach((img) => { img.src = LOGO2;
   $('btn-cancel').addEventListener('click', () => {
     const s = app.session; if (!s) return;
     if (s.items.length && !confirm('Annuler la séance ? Ses notes seront effacées.')) return;
+    Sound.play('cancel');
     for (const item of s.items) {
       const h = app.db.evals[item.id]; if (!h) continue;
       const i = h.findIndex((e) => e.d === item.d);
@@ -2011,6 +2089,7 @@ document.querySelectorAll('img[data-logo2]').forEach((img) => { img.src = LOGO2;
 
   function finishSession() {
     const s = app.session;
+    Sound.play('end');
     s.end = new Date().toISOString();
     s.queue = s.queue.slice(0, s.items.length);
     delete s.pending;
@@ -2180,11 +2259,11 @@ document.querySelectorAll('img[data-logo2]').forEach((img) => { img.src = LOGO2;
     '-1': {
       steps: ['Suwari waza (à genoux)', 'Hanmi handachi waza (attaquant debout, défenseur à genoux)', 'Tachi waza (debout)', 'Ushiro waza (attaques arrière)',
         'Deux formes choisies par le jury : tanto dori (couteau), jo dori ou jo nage waza (bâton), randori avec deux partenaires sur attaques imposées'],
-      extra: ['Quatre premiers principes du kata', 'Programme de toutes les ceintures'],
-      rules: ['Âge minimum : 16 ans', 'Au moins un an après le 1er kyū', 'Dossier à la ligue un mois avant l’examen',
+      extra: ['Programme de toutes les ceintures'],
+      rules: ['Âge minimum : 15 ans', 'Au moins un an après le 1er kyū', 'Dossier à la ligue un mois avant l’examen',
         'Pièces : passeport sportif (timbres de licence, page des stages avec trois stages homologués), formulaire signé du professeur, certificat médical, chèque à l’ordre de la ligue',
         'Le jour de l’examen : passeport, certificat médical et armes'],
-      source: 'Fiche d’examen Aïkido Montigny, septembre 2019',
+      source: 'Fiche d’examen Aïkido Montigny, septembre 2019, mise à jour : plus de kata à l’examen, âge minimum 15 ans',
     },
     '-2': {
       level: 'Au travail du 1er dan s’ajoutent rapidité et puissance, avec une détermination mentale plus affirmée. Le jury doit percevoir une mise en forme et une orientation du travail plus claires.',
@@ -2267,7 +2346,6 @@ document.querySelectorAll('img[data-logo2]').forEach((img) => { img.src = LOGO2;
     3: 'les trois premiers principes (ikkyo, nikyo, sankyo)',
     2: 'les quatre premiers principes (ikkyo à yonkyo)',
     1: 'les quatre premiers principes (ikkyo à yonkyo)',
-    '-1': 'les quatre premiers principes (ikkyo à yonkyo)',
   };
   function kataBlock(g) {
     const req = KATA_REQ[String(g)];
@@ -2377,13 +2455,13 @@ document.querySelectorAll('img[data-logo2]').forEach((img) => { img.src = LOGO2;
     if (open) $('btn-resume').textContent = `Reprendre la séance (technique ${Math.min(open.items.length + 1, open.queue.length)} sur ${open.queue.length})`;
     refreshForm();
     show('home');
-    $('t-hero').focus({ preventScroll: true });
+    showSection(app.homeSection);
   }
   $('sessions-table').addEventListener('click', (e) => {
     const b = e.target.closest('[data-report]'); if (!b) return;
     const s = app.db.sessions.find((x) => x.id === b.dataset.report); if (s) showReport(s);
   });
-  $('btn-resume').addEventListener('click', () => { app.session = openSession(); show('quiz'); renderQuestion(); });
+  $('btn-resume').addEventListener('click', () => { app.session = openSession(); app.launchDelay = 800; Sound.play('start'); updateSoundButton(); show('quiz'); renderQuestion(); });
   $('btn-resume-form').addEventListener('click', () => $('btn-resume').click());
 
   /* ---------- Bilan d’une séance ---------- */
