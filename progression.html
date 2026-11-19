@@ -530,6 +530,12 @@ header.site .club-item img { width: auto; height: 2.3rem; }
 .header-photo.is-disabled { opacity: .45; cursor: default; filter: grayscale(1); }
 .header-photo.is-disabled:hover .header-name { color: inherit; }
 
+/* Bilan à l’écran : logos et photo déjà dans l’en-tête de la page ; ils restent dans le PDF */
+@media screen {
+  .report-head img, .report-head .kanji { display: none !important; }
+  .report-head { padding-bottom: .9rem; }
+}
+
 /* Profil */
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 1.5rem; row-gap: 0; }
 .form-grid .field { display: grid; grid-row: span 3; grid-template-rows: subgrid; row-gap: .35rem; margin-bottom: 1rem; min-width: 0; }
