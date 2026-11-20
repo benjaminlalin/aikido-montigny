@@ -536,6 +536,14 @@ header.site .club-item img { width: auto; height: 2.3rem; }
   .report-head { padding-bottom: .9rem; }
 }
 
+/* Lancement rapide en haut de « Nouvelle séance », réglages repliés */
+.quick-start { margin-top: 1.1rem; padding: .9rem 1.1rem; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); align-items: center; }
+.quick-start > div { min-width: 0; flex: 1 1 14rem; }
+details.custom { margin-top: 1rem; }
+details.custom > summary { font-weight: 500; }
+details.custom > fieldset:first-of-type { margin-top: .6rem; }
+details.custom details.more { margin-top: .3rem; }
+
 /* Profil */
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 1.5rem; row-gap: 0; }
 .form-grid .field { display: grid; grid-row: span 3; grid-template-rows: subgrid; row-gap: .35rem; margin-bottom: 1rem; min-width: 0; }
@@ -694,13 +702,18 @@ button, .chip, .cell, .rate { -webkit-tap-highlight-color: transparent; touch-ac
           <legend>Grade</legend>
           <div class="chips" id="g-kyu"></div>
           <p class="grade-legend" id="grade-legend" hidden></p>
-          <details class="more">
-            <summary>Affiner par attaque ou par défense</summary>
-            <fieldset><legend>Attaque</legend><div class="chips" id="g-attaque"></div></fieldset>
-            <fieldset><legend>Défense</legend><div class="chips" id="g-defense"></div></fieldset>
-          </details>
         </fieldset>
-        <fieldset>
+        <div class="row spread setup-footer quick-start">
+          <div>
+            <p id="match-info" class="muted" aria-live="polite" style="margin:0"></p>
+            <p id="settings-info" class="muted small" style="margin:.15rem 0 0"></p>
+            <p id="paused-info" class="muted" style="margin:.15rem 0 0" hidden>Une séance est en pause. <button type="button" class="link-btn" id="btn-resume-form">La reprendre</button></p>
+          </div>
+          <button type="submit" class="btn btn-primary" id="btn-start">Commencer la séance</button>
+        </div>
+        <details class="more custom" id="custom">
+          <summary>Personnaliser la séance</summary>
+          <fieldset>
           <legend>Déroulé de la séance</legend>
           <div class="chips" id="order-chips"></div>
 
@@ -717,14 +730,21 @@ button, .chip, .cell, .rate { -webkit-tap-highlight-color: transparent; touch-ac
           <div class="chips" id="mode-chips"></div>
           <div class="chips" id="fund-filter" style="margin-top:.45rem"><label class="chip"><input type="checkbox" id="only-fund"><span><span class="fund" aria-hidden="true">♥</span> Seulement les techniques fondamentales</span></label></div>
         </fieldset>
+          <fieldset>
+            <legend>Attaques et défenses</legend>
+          <details class="more">
+            <summary>Affiner par attaque ou par défense</summary>
+            <fieldset><legend>Attaque</legend><div class="chips" id="g-attaque"></div></fieldset>
+            <fieldset><legend>Défense</legend><div class="chips" id="g-defense"></div></fieldset>
+          </details>
+          </fieldset>
+        </details>
         <fieldset>
           <legend>Programme</legend>
           <div class="program" id="program" aria-live="polite"></div>
         </fieldset>
-        <div class="row spread setup-footer">
-          <p id="paused-info" class="muted" style="margin:0" hidden>Une séance est en pause. <button type="button" class="link-btn" id="btn-resume-form">La reprendre</button></p>
-          <p id="match-info" class="muted" aria-live="polite" style="margin:0"></p>
-          <button type="submit" class="btn btn-primary" id="btn-start">Commencer la séance</button>
+        <div class="row setup-footer" style="justify-content:flex-end">
+          <button type="submit" class="btn btn-primary" id="btn-start-bottom">Commencer la séance</button>
         </div>
       </form>
     </section>
@@ -1740,7 +1760,10 @@ document.querySelectorAll('img[data-logo2]').forEach((img) => { img.src = LOGO2;
     $('match-info').textContent = n === 0 ? 'Aucune technique ne correspond à ces choix.'
       : app.picked.size ? `${plural(n, 'technique')} sélectionnée${n > 1 ? 's' : ''}, toutes dans cette séance.`
       : `${plural(n, 'technique')} disponible${n > 1 ? 's' : ''}, ${max >= n ? (n > 1 ? 'toutes' : 'elle') : Math.min(n, max)} dans cette séance.`;
-    $('btn-start').disabled = n === 0;
+    $('btn-start').disabled = $('btn-start-bottom').disabled = n === 0;
+    const ord = ORDERS.find((o) => o[0] === currentOrder())[1], cnt = $('max-q').value === 'all' ? 'toutes les techniques' : `${$('max-q').value} techniques`;
+    const mode = MODES.find((m) => m[0] === (checkedValues('mode')[0] || 'faibles'))[1];
+    $('settings-info').textContent = app.picked.size ? `${ord}.` : `${ord}, ${cnt}, ${mode.charAt(0).toLowerCase() + mode.slice(1)}${$('only-fund').checked ? ', fondamentales seulement' : ''}.`;
   }
   /* Rang d’un grade : 6e kyū = 1 … 1er kyū = 6, 1er dan = 7, 2e dan = 8 */
   const gradeRank = (k) => (k > 0 ? 7 - k : 6 - k);
@@ -1777,6 +1800,8 @@ document.querySelectorAll('img[data-logo2]').forEach((img) => { img.src = LOGO2;
     markGradeChips(); cascadeChips(); renderProgram(); updateMatch(); }
   $('setup-form').addEventListener('change', refreshForm);
   $('max-q').addEventListener('change', updateMatch);
+  $('mode-chips').addEventListener('change', () => updateMatch());
+  $('only-fund').addEventListener('change', () => updateMatch());
   function maxCount() { const v = $('max-q').value; return v === 'all' ? Infinity : Math.max(1, Number(v) || 1); }
 
   /* Tirage : les techniques faibles ou anciennes sortent plus souvent */
@@ -1815,7 +1840,7 @@ document.querySelectorAll('img[data-logo2]').forEach((img) => { img.src = LOGO2;
     return pick(list, list.length, false);
   }
   const currentOrder = () => checkedValues('order')[0] || 'random';
-  function updateOrderHelp() {}
+  function updateOrderHelp() { if (typeof updateMatch === 'function') updateMatch(); }
   $('order-chips').addEventListener('change', updateOrderHelp);
 
   $('setup-form').addEventListener('submit', (e) => {
