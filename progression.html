@@ -292,7 +292,7 @@ table.matrix { width: 100%; border-collapse: collapse; }
 .splash-text .splash-name { font-size: 1.3em; margin-bottom: .1em; }
 .splash-inner { max-width: none; }
 .splash-line { width: 7rem; height: 2px; background: var(--line); border-radius: 1px; overflow: hidden; margin-top: .4rem; }
-.splash-line i { display: block; height: 100%; width: 100%; background: var(--accent); transform-origin: left; transform: scaleX(0); animation: splash-line 2.5s linear forwards; }
+.splash-line i { display: block; height: 100%; width: 100%; background: var(--accent); transform-origin: left; transform: scaleX(0); animation: splash-line 1.8s linear forwards; }
 @keyframes splash-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 @keyframes splash-line { to { transform: scaleX(1); } }
 @media (prefers-reduced-motion: reduce) {
@@ -419,7 +419,7 @@ input[type="date"]::-webkit-datetime-edit { padding: 0; }
 /* Transitions entre les écrans */
 .screen-enter { animation: screen-in .45s ease both; }
 #screen-home > section.screen-enter { animation-duration: .8s; }            /* d’une rubrique du menu à l’autre */
-#screen-quiz.screen-enter { animation-duration: .8s; }                    /* lancement d’une séance */
+#screen-quiz.screen-enter { animation-duration: .6s; }                    /* lancement d’une séance */
 .screen-leave { opacity: 0; transform: translateY(4px); transition: opacity .3s ease, transform .3s ease; }
 .site-menu.screen-enter { animation-duration: .6s; }
 @keyframes screen-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
@@ -914,7 +914,7 @@ document.querySelectorAll('img[data-logo2]').forEach((img) => { img.src = LOGO2;
     splash.classList.add('out');
     setTimeout(() => splash.remove(), 700);
   };
-  setTimeout(hide, 2500);
+  setTimeout(hide, 1800);
   splash.addEventListener('click', hide);
   document.addEventListener('keydown', hide, { once: true });
 })();
@@ -1964,7 +1964,7 @@ document.querySelectorAll('img[data-logo2]').forEach((img) => { img.src = LOGO2;
     const s = { id: Date.now().toString(36), start: new Date().toISOString(), end: null, mode: label, queue: ids, items: [] };
     app.db.sessions.push(s); saveDb();
     app.session = s;
-    app.launchDelay = 800;
+    app.launchDelay = 550;
     Sound.play('start');
     updateSoundButton();
     show('quiz'); renderQuestion();
@@ -2480,7 +2480,7 @@ document.querySelectorAll('img[data-logo2]').forEach((img) => { img.src = LOGO2;
     const b = e.target.closest('[data-report]'); if (!b) return;
     const s = app.db.sessions.find((x) => x.id === b.dataset.report); if (s) showReport(s);
   });
-  $('btn-resume').addEventListener('click', () => { app.session = openSession(); app.launchDelay = 800; Sound.play('start'); updateSoundButton(); show('quiz'); renderQuestion(); });
+  $('btn-resume').addEventListener('click', () => { app.session = openSession(); app.launchDelay = 550; Sound.play('start'); updateSoundButton(); show('quiz'); renderQuestion(); });
   $('btn-resume-form').addEventListener('click', () => $('btn-resume').click());
 
   /* ---------- Bilan d’une séance ---------- */
