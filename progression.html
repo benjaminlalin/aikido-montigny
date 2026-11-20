@@ -135,7 +135,7 @@ textarea { width: 100%; min-height: 3.6rem; resize: vertical; }
 @media (max-width: 400px) {
   header.site .clubs { flex-wrap: nowrap; gap: .5rem; }
   header.site .clubs .club-item img { height: 1.8rem; }
-  .player .controls { gap: .25rem; flex-wrap: nowrap; }
+  .player .controls { gap: .25rem; }
   .player .controls .ctl-icon { width: 2.25rem; height: 2.25rem; }
   .player .controls .ctl-sep { margin: 0 .05rem; }
   #screen-quiz .rate-dock .dock-row .rate { font-size: .6rem; padding-left: .05rem; padding-right: .05rem; }
@@ -622,6 +622,30 @@ details.custom details.more { margin-top: .3rem; }
 .last-note { margin: .5rem 0 0; padding: .45rem .7rem; border-left: 3px solid var(--rule); border-radius: 0 6px 6px 0; background: var(--paper); font-size: .92rem; color: var(--ink); }
 .last-note .ln-label { color: var(--muted); }
 @media (min-width: 960px) { #screen-quiz > .last-note { grid-area: note; margin-top: .6rem; } }
+
+/* Séance sur téléphone : en-tête et noms plus compacts, pour garder les commandes au-dessus de la barre de notation */
+@media (max-width: 720px) {
+  #screen-quiz .quiz-head { gap: .35rem .6rem; }
+  #screen-quiz .session-ctl { gap: .3rem; }
+  #screen-quiz .session-ctl .ctl { min-height: 1.95rem; padding: .15rem .6rem; font-size: .8rem; }
+  #screen-quiz .session-ctl .ctl-icon { width: 1.95rem; height: 1.95rem; padding: 0; }
+  #screen-quiz .steps { margin-top: .5rem; }
+  #screen-quiz > .technique { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: .3rem 1rem; margin-top: .8rem; align-items: start; }
+  #screen-quiz > .technique .tech-sep { display: none; }
+  #screen-quiz .tech-name { font-size: 1.15rem; }
+  #screen-quiz .tech-block .label { font-size: .75rem; }
+  #screen-quiz > .tech-meta { margin-top: .4rem; font-size: .85rem; }
+  #screen-quiz > .player { margin-top: .7rem; }
+}
+/* Commandes de la vidéo : toujours rondes */
+.controls .ctl-icon { flex: 0 0 auto; aspect-ratio: 1 / 1; }
+.player .controls { flex-wrap: wrap; row-gap: .4rem; }
+@media (max-width: 480px) {
+  #screen-quiz .player .controls { gap: .15rem; }
+  #screen-quiz .player .controls .ctl-icon { width: 1.88rem; height: 1.88rem; min-width: 0; }
+  #screen-quiz .player .controls .ctl-icon svg { width: 1.1rem; height: 1.1rem; }
+  #screen-quiz .player .controls .ctl-sep { margin: 0 .05rem; }
+}
 
 /* Profil */
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 1.5rem; row-gap: 0; }
@@ -2103,11 +2127,11 @@ document.querySelectorAll('img[data-logo2]').forEach((img) => { img.src = LOGO2;
     play(kind) {
       if (!this.enabled()) return;
       try {
-        if (kind === 'start') this.clip('phrase1', 0.6);          // nouvelle séance
-        else if (kind === 'resume') this.clip('gongLong', 0.5);    // reprise d’une séance en pause
-        else if (kind === 'pause') this.clip('gongGrave', 0.5);
-        else if (kind === 'end') this.clip('phrase2', 0.6);        // clôture
-        else if (kind === 'cancel') this.clip('gongMedium', 0.4);
+        if (kind === 'start') this.clip('phrase1', 0.32);          // nouvelle séance
+        else if (kind === 'resume') this.clip('gongLong', 0.28);    // reprise d’une séance en pause
+        else if (kind === 'pause') this.clip('gongGrave', 0.3);
+        else if (kind === 'end') this.clip('phrase2', 0.32);        // clôture
+        else if (kind === 'cancel') this.clip('gongMedium', 0.24);
       } catch {}
     },
   };
@@ -2203,6 +2227,19 @@ document.querySelectorAll('img[data-logo2]').forEach((img) => { img.src = LOGO2;
   $('q-comment').addEventListener('input', () => { clearTimeout(pendingTimer); pendingTimer = setTimeout(rememberPending, 500); });
   $('scale').addEventListener('click', (e) => { const b = e.target.closest('.rate'); if (b) rate(Number(b.dataset.n)); });
 
+  /* Enregistre la note de la technique en cours (sans passer à la suivante) */
+  function commitCurrent() {
+    const c = app.current; if (!c || !c.n) return false;
+    const prev = lastEval(c.t.id);
+    const comment = $('q-comment').value.trim();
+    const now = new Date().toISOString();
+    (app.db.evals[c.t.id] ||= []).push(comment ? { d: now, n: c.n, c: comment } : { d: now, n: c.n });
+    app.session.items.push({ id: c.t.id, n: c.n, prev: prev ? prev.n : null, d: now, ...(comment && { c: comment }) });
+    delete app.session.pending;
+    saveDb();
+    app.current = null;
+    return true;
+  }
   function next() {
     const c = app.current; if (!c || !c.n) return;
     const prev = lastEval(c.t.id);
@@ -2242,11 +2279,16 @@ document.querySelectorAll('img[data-logo2]').forEach((img) => { img.src = LOGO2;
   $('btn-prev').addEventListener('click', previous);
   /* Terminer avant la fin de la série : confirmation, puis un son court (la phrase de clôture reste pour une série complète) */
   $('btn-stop').addEventListener('click', () => {
-    const s = app.session, done = s.items.length, left = s.queue.length - done;
+    const s = app.session;
+    // une note est déjà choisie : c’est comme « Suivante » ; si c’était la dernière technique, la séance se termine normalement
+    const rated = Boolean(app.current && app.current.n);
+    if (rated && s.items.length + 1 === s.queue.length) return next();
+    const done = s.items.length + (rated ? 1 : 0), left = s.queue.length - done;
     const msg = done
       ? `Terminer la séance maintenant ? ${left} technique${left > 1 ? 's' : ''} sur ${s.queue.length} ne ${left > 1 ? 'seront' : 'sera'} pas notée${left > 1 ? 's' : ''}.`
       : 'Terminer la séance maintenant ? Aucune technique n’a encore été notée : la séance ne sera pas enregistrée.';
     if (!confirm(msg)) return;
+    if (rated) commitCurrent();
     Sound.play('end');
     if (!done) { app.db.sessions = app.db.sessions.filter((x) => x !== s); saveDb(); app.session = null; return leaveQuiz(showHome); }
     app.endedEarly = true;
