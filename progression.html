@@ -680,6 +680,16 @@ dialog.ask[open] { animation: screen-in .25s ease both; }
 .switch input:checked + .switch-track::after { transform: translateX(1.15rem); }
 .switch input:focus-visible + .switch-track { box-shadow: var(--focus); }
 
+/* Bouton lecture au centre de la vidéo */
+.video-play { position: absolute; left: 50%; top: 50%; z-index: 2; display: grid; place-items: center; width: 4.4rem; height: 4.4rem; margin: -2.2rem 0 0 -2.2rem;
+  border: 0; border-radius: 50%; background: rgba(40, 43, 50, .72); color: #fff; cursor: pointer; box-shadow: 0 4px 18px rgba(0,0,0,.25);
+  opacity: 0; transform: scale(.9); transition: opacity .2s ease, transform .2s ease; }
+.video-play.is-visible { opacity: 1; transform: none; }
+.video-play svg { width: 2.1rem; height: 2.1rem; margin-left: .25rem; fill: currentColor; }
+.video-play:hover { background: rgba(40, 43, 50, .85); }
+.video-play:focus-visible { outline: none; box-shadow: var(--focus); }
+@media (max-width: 720px) { .video-play { width: 3.6rem; height: 3.6rem; margin: -1.8rem 0 0 -1.8rem; } .video-play svg { width: 1.6rem; height: 1.6rem; } }
+
 /* Profil */
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 1.5rem; row-gap: 0; }
 .form-grid .field { display: grid; grid-row: span 3; grid-template-rows: subgrid; row-gap: .35rem; margin-bottom: 1rem; min-width: 0; }
@@ -952,6 +962,7 @@ button, .chip, .cell, .rate { -webkit-tap-highlight-color: transparent; touch-ac
       <div class="video-frame">
         <video id="video" controls playsinline preload="auto"></video>
         <div class="video-msg" id="video-msg" hidden><p id="video-msg-text"></p></div>
+        <button type="button" class="video-play" id="video-play" aria-label="Lire la vidéo" hidden><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 4.5v15l12-7.5z"/></svg></button>
       </div>
       <div class="controls" role="group" aria-label="Commandes de la vidéo">
         <button class="ctl ctl-icon" id="btn-prev" data-tip="Technique précédente" aria-label="Technique précédente"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5.5 8.5 12l6.5 6.5"/></svg></button>
@@ -2036,19 +2047,33 @@ document.querySelectorAll('img[data-logo2]').forEach((img) => { img.src = LOGO2;
     video.removeAttribute('src'); video.load();
     if (blobUrl) { URL.revokeObjectURL(blobUrl); blobUrl = null; }
   }
+  /* Grand bouton lecture par-dessus la vidéo en pause */
+  let autoplayPending = false;
+  function updatePlayOverlay() {
+    const b = $('video-play');
+    const ready = video.getAttribute('src') && video.readyState >= 1 && $('video-msg').hidden;
+    const show = Boolean(ready && video.paused && !autoplayPending && !$('screen-quiz').hidden);
+    b.classList.toggle('is-visible', show);
+    b.hidden = !show && !b.classList.contains('fading');
+    if (!show && !b.hidden) { b.classList.add('fading'); setTimeout(() => { b.classList.remove('fading'); if (!b.classList.contains('is-visible')) b.hidden = true; }, 250); }
+  }
+  ['play', 'playing', 'pause', 'ended', 'loadedmetadata', 'loadeddata', 'emptied'].forEach((ev) => video.addEventListener(ev, updatePlayOverlay));
+  $('video-play').addEventListener('click', () => { autoplayPending = false; video.muted = false; video.play().catch(() => {}); });
   function videoMessage(text) { $('video-msg-text').textContent = text; $('video-msg').hidden = !text; }
   function startPlayback() {
     const delay = app.launchDelay || 0;
     if (delay) {
       app.launchDelay = 0;
       const token = videoToken;
-      setTimeout(() => { if (token === videoToken && !$('screen-quiz').hidden) startPlayback(); }, delay);
+      autoplayPending = profile().autoplay !== false;   // pas de bouton lecture pendant l’attente d’un démarrage automatique
+      setTimeout(() => { autoplayPending = false; if (token === videoToken && !$('screen-quiz').hidden) startPlayback(); updatePlayOverlay(); }, delay);
       return;
     }
     video.playbackRate = $('ctl-slow').getAttribute('aria-pressed') === 'true' ? 0.5 : 1;
     video.loop = $('ctl-loop').getAttribute('aria-pressed') === 'true';
     video.muted = false;
     if (profile().autoplay !== false) video.play().catch(() => { video.muted = true; video.play().catch(() => {}); });
+    updatePlayOverlay();
     setTimeout(prefetchNext, 1500);
   }
   /* Un nom accentué peut être enregistré de deux façons (« ï » d’un seul caractère, ou « i » + tréma, fréquent depuis un Mac) */
