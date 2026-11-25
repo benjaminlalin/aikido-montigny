@@ -670,6 +670,16 @@ dialog.ask[open] { animation: screen-in .25s ease both; }
 }
 @media (max-width: 720px) { .tech-help { font-size: .85rem; } .tech-help > span { grid-template-columns: 4.6rem minmax(0, 1fr); } }
 
+/* Interrupteur (préférences du profil) */
+.prefs h3 { margin: 0 0 .7rem; }
+.switch { display: flex; align-items: center; gap: .75rem; cursor: pointer; line-height: 1.35; }
+.switch input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.switch-track { position: relative; flex: none; width: 2.7rem; height: 1.55rem; border-radius: 999px; background: var(--line); transition: background .2s; }
+.switch-track::after { content: ""; position: absolute; top: .18rem; left: .18rem; width: 1.19rem; height: 1.19rem; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.25); transition: transform .2s; }
+.switch input:checked + .switch-track { background: var(--accent); }
+.switch input:checked + .switch-track::after { transform: translateX(1.15rem); }
+.switch input:focus-visible + .switch-track { box-shadow: var(--focus); }
+
 /* Profil */
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 1.5rem; row-gap: 0; }
 .form-grid .field { display: grid; grid-row: span 3; grid-template-rows: subgrid; row-gap: .35rem; margin-bottom: 1rem; min-width: 0; }
@@ -998,6 +1008,10 @@ button, .chip, .cell, .rate { -webkit-tap-highlight-color: transparent; touch-ac
         <div class="field"><label for="pf-licence">Numéro de licence</label><input id="pf-licence" name="licence" autocomplete="off"></div>
         <div class="field"><label for="pf-debut">Début de la pratique</label><input type="date" id="pf-debut" name="debut"></div>
         <div class="field"><label for="pf-grade">Grade actuel</label><select id="pf-grade" name="grade"></select></div>
+      </div>
+      <div class="form-section prefs">
+        <h3>Préférences</h3>
+        <label class="switch"><input type="checkbox" id="pf-autoplay" role="switch" checked><span class="switch-track" aria-hidden="true"></span><span>Lecture automatique des vidéos pendant les révisions et les passages de grade</span></label>
       </div>
       <div class="form-section" id="passages-section">
         <h3>Dates de passage de grade</h3>
@@ -1630,6 +1644,7 @@ document.querySelectorAll('img[data-logo2]').forEach((img) => { img.src = LOGO2;
     $('pf-prenom').value = p.prenom || '';
     $('pf-nom').value = p.nom || '';
     $('pf-club').value = clubName();
+    $('pf-autoplay').checked = p.autoplay !== false;
     $('pf-licence').value = p.licence || '';
     $('pf-debut').value = p.debut || '';
     $('pf-grade').innerHTML = '<option value="">Pas encore de grade</option>' + GRADES.map((k) => `<option value="${k}">${gradeChoice(k).replace(/\u00a0/g, ' ')} (${k < 0 ? DAN_NAMES[k].match(/\((.*)\)/)[1] : KYU_NAMES[k]})</option>`).join('');
@@ -1656,6 +1671,7 @@ document.querySelectorAll('img[data-logo2]').forEach((img) => { img.src = LOGO2;
       debut: $('pf-debut').value,
       grade: Number($('pf-grade').value) || null,
       passages,
+      autoplay: $('pf-autoplay').checked,
       photo: crop.img ? exportPhoto() : (crop.removed ? undefined : profile().photo),
     };
     saveDb();
@@ -2032,7 +2048,7 @@ document.querySelectorAll('img[data-logo2]').forEach((img) => { img.src = LOGO2;
     video.playbackRate = $('ctl-slow').getAttribute('aria-pressed') === 'true' ? 0.5 : 1;
     video.loop = $('ctl-loop').getAttribute('aria-pressed') === 'true';
     video.muted = false;
-    video.play().catch(() => { video.muted = true; video.play().catch(() => {}); });
+    if (profile().autoplay !== false) video.play().catch(() => { video.muted = true; video.play().catch(() => {}); });
     setTimeout(prefetchNext, 1500);
   }
   /* Un nom accentué peut être enregistré de deux façons (« ï » d’un seul caractère, ou « i » + tréma, fréquent depuis un Mac) */
