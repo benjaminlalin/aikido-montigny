@@ -564,7 +564,6 @@ details.custom details.more { margin-top: .3rem; }
 /* Séance sur grand écran : la vidéo occupe la largeur, technique et notation dans une colonne à droite */
 @media (min-width: 960px) {
   main:has(#screen-quiz:not([hidden])) { max-width: min(96vw, 1680px); }
-  body:has(#screen-quiz:not([hidden])) header.site { max-width: min(96vw, 1680px); }
   #screen-quiz:not([hidden]) { display: grid; grid-template-columns: minmax(0, 1fr) 21rem; column-gap: 2rem; align-items: start;
     grid-template-areas: "head head" "steps steps" "player tech" "player help" "player meta" "player note" "player dock" "player rating"; }
   #screen-quiz > .quiz-head { grid-area: head; }
@@ -2049,8 +2048,11 @@ document.querySelectorAll('img[data-logo2]').forEach((img) => { img.src = LOGO2;
   }
   /* Grand bouton lecture par-dessus la vidéo en pause */
   let autoplayPending = false;
+  // iPhone et iPad affichent déjà leur propre bouton lecture au centre de la vidéo : on ne superpose pas le nôtre
+  const NATIVE_PLAY_OVERLAY = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   function updatePlayOverlay() {
     const b = $('video-play');
+    if (NATIVE_PLAY_OVERLAY) { b.hidden = true; b.classList.remove('is-visible'); return; }
     const ready = video.getAttribute('src') && video.readyState >= 1 && $('video-msg').hidden;
     const show = Boolean(ready && video.paused && !autoplayPending && !$('screen-quiz').hidden);
     b.classList.toggle('is-visible', show);
